@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BrandFinder - Marques</title>
+    <meta content="Archive de vêtements" name="description">
+    <link rel="icon" type="image/png" href="favicon.png">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #e0e0e0;
+            min-height: 100vh;
+            padding-bottom: 50px;
+        }
+
+        header {
+            background: rgba(30, 30, 46, 0.8);
+            backdrop-filter: blur(10px);
+            padding: 25px 0;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            animation: slideDown 0.6s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            padding: 0 20px;
+        }
+
+        nav a {
+            color: #e0e0e0;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 500;
+            padding: 10px 20px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: 5px;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #8b5cf6, #ec4899);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+
+        nav a:hover {
+            color: #fff;
+            transform: translateY(-2px);
+        }
+
+        nav a:hover::after {
+            width: 80%;
+        }
+
+        nav a.active {
+            background: linear-gradient(135deg, #8b5cf6, #ec4899);
+            color: white;
+        }
+
+        .search-container {
+            background: rgba(30, 30, 46, 0.9);
+            backdrop-filter: blur(10px);
+            padding: 20px 0;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            position: sticky;
+            top: 82px;
+            z-index: 999;
+            animation: slideDown 0.6s ease-out 0.2s backwards;
+        }
+
+        .search-wrapper {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 15px 20px;
+            background: rgba(139, 92, 246, 0.1);
+            border: 2px solid rgba(139, 92, 246, 0.3);
+            border-radius: 12px;
+            color: #e0e0e0;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: rgba(139, 92, 246, 0.6);
+            background: rgba(139, 92, 246, 0.15);
+        }
+
+        .search-input::placeholder {
+            color: #888;
+        }
+
+        .filter-button {
+            padding: 15px 30px;
+            background: linear-gradient(135deg, #8b5cf6, #ec4899);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .filter-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(139, 92, 246, 0.4);
+        }
+
+        .filter-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 2000;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .filter-modal.active {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .filter-content {
+            background: rgba(30, 30, 46, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 500px;
+            width: 90%;
+            border: 2px solid rgba(139, 92, 246, 0.3);
+            animation: slideUp 0.3s ease-out;
+        }
+
+        .filter-content h2 {
+            color: #fff;
+            margin-bottom: 30px;
+            font-size: 28px;
+            background: linear-gradient(135deg, #8b5cf6, #ec4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .filter-section {
+            margin-bottom: 30px;
+        }
+
+        .filter-section h3 {
+            color: #e0e0e0;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+
+        .filter-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .filter-option {
+            padding: 10px 20px;
+            background: rgba(139, 92, 246, 0.1);
+            border: 2px solid rgba(139, 92, 246, 0.3);
+            border-radius: 8px;
+            color: #e0e0e0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .filter-option:hover {
+            background: rgba(139, 92, 246, 0.2);
+            border-color: rgba(139, 92, 246, 0.5);
+        }
+
+        .filter-option.active {
+            background: linear-gradient(135deg, #8b5cf6, #ec4899);
+            border-color: transparent;
+            color: white;
+        }
+
+        .filter-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .filter-actions button {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .apply-filters {
+            background: linear-gradient(135deg, #8b5cf6, #ec4899);
+            color: white;
+        }
+
+        .apply-filters:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(139, 92, 246, 0.4);
+        }
+
+        .reset-filters {
+            background: rgba(139, 92, 246, 0.1);
+            border: 2px solid rgba(139, 92, 246, 0.3);
+            color: #e0e0e0;
+        }
+
+        .reset-filters:hover {
+            background: rgba(139, 92, 246, 0.2);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 50px auto;
+            padding: 0 20px;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 42px;
+            margin-bottom: 50px;
+            background: linear-gradient(135deg, #8b5cf6, #ec4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .brands-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
+            gap: 30px;
+            animation: fadeIn 1s ease-out 0.2s backwards;
+        }
+
+        .brand-card {
+            background: rgba(30, 30, 46, 0.6);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 25px;
+            display: flex;
+            gap: 25px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid rgba(139, 92, 246, 0.1);
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .brand-card.hidden {
+            display: none;
+        }
+
+        .brand-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 16px 48px rgba(139, 92, 246, 0.3);
+            border-color: rgba(139, 92, 246, 0.4);
+        }
+
+        .brand-logo {
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(236, 72, 153, 0.2));
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            border: 2px solid rgba(139, 92, 246, 0.3);
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+
+        .brand-logo img {
+            width: 130%;
+            height: 130%;
+            object-fit: cover;
+            padding: 10px;
+        }
+
+        .brand-card:hover .brand-logo {
+            transform: scale(1.05);
+            border-color: rgba(139, 92, 246, 0.6);
+        }
+
+        .brand-info {
+            flex: 1;
+        }
+
+        .brand-name {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #fff;
+        }
+
+        .brand-details {
+            list-style: none;
+            line-height: 1.8;
+        }
+
+        .brand-details li {
+            margin-bottom: 10px;
+            color: #b0b0b0;
+        }
+
+        .brand-details strong {
+            color: #e0e0e0;
+            margin-right: 5px;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 60px 20px;
+            color: #888;
+            font-size: 18px;
+            display: none;
+        }
+
+        .no-results.visible {
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            nav {
+                flex-wrap: wrap;
+                gap: 15px;
+            }
+
+            nav a {
+                font-size: 14px;
+                padding: 8px 15px;
+            }
+
+            .search-container {
+                top: 70px;
+            }
+
+            .search-wrapper {
+                flex-direction: column;
+            }
+
+            .search-input {
+                width: 100%;
+            }
+
+            .filter-button {
+                width: 100%;
+            }
+
+            h1 {
+                font-size: 32px;
+            }
+
+            .brands-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .brand-card {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+
+            .brand-logo {
+                width: 100px;
+                height: 100px;
+            }
+
+            .filter-content {
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="index.html" class="active">Marques</a>
+            <a href="vetements.html">Vêtements</a>
+            <a href="accessoires.html">Accessoires</a>
+            <a href="apropos.html">À propos</a>
+        </nav>
+    </header>
+
+    <div class="search-container">
+        <div class="search-wrapper">
+            <input type="text" class="search-input" id="searchInput" placeholder="Rechercher une marque...">
+            <button class="filter-button" id="filterButton">Filtres</button>
+        </div>
+    </div>
+
+    <div class="filter-modal" id="filterModal">
+        <div class="filter-content">
+            <h2>Filtres</h2>
+            
+            <div class="filter-section">
+                <h3>Prix</h3>
+                <div class="filter-options" id="priceFilters">
+                    <div class="filter-option" data-filter="price" data-value="Élevé">Élevé</div>
+                    <div class="filter-option" data-filter="price" data-value="Correct">Correct</div>
+                    <div class="filter-option" data-filter="price" data-value="Bas">Bas</div>
+                </div>
+            </div>
+
+            <div class="filter-section">
+                <h3>Style</h3>
+                <div class="filter-options" id="styleFilters">
+                    <div class="filter-option" data-filter="style" data-value="Streetwear">Streetwear</div>
+                    <div class="filter-option" data-filter="style" data-value="Goth">Goth</div>
+                    <div class="filter-option" data-filter="style" data-value="Fancy">Fancy</div>
+                </div>
+            </div>
+
+            <div class="filter-actions">
+                <button class="reset-filters" id="resetFilters">Réinitialiser</button>
+                <button class="apply-filters" id="applyFilters">Appliquer</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <h1>Liste de Marques</h1>
+        <div class="brands-grid" id="brandsGrid">
+            <a href="https://soraclothing.com" class="brand-card" target="_blank" data-price="Élevé" data-style="Streetwear" data-name="Sora Clothing">
+                <div class="brand-logo">
+                    <img src="logo/soraclothing.png" alt="Sora Clothing">
+                </div>
+                <div class="brand-info">
+                    <div class="brand-name">Sora Clothing</div>
+                    <ul class="brand-details">
+                        <li><strong>Style :</strong> Streetwear animé</li>
+                        <li><strong>Prix :</strong> Élevé</li>
+                        <li><strong>Description :</strong> Vêtements urbains avec un style basé sur les animés, un peu plus poussé que Tuko ou Astorrco</li>
+                    </ul>
+                </div>
+            </a>
+
+            <a href="https://tukoclothing.com" class="brand-card" target="_blank" data-price="Élevé" data-style="Streetwear" data-name="Tuko Clothing">
+                <div class="brand-logo">
+                    <img src="logo/tukoclothing.png" alt="Tuko Clothing">
+                </div>
+                <div class="brand-info">
+                    <div class="brand-name">Tuko Clothing</div>
+                    <ul class="brand-details">
+                        <li><strong>Style :</strong> Streetwear animé</li>
+                        <li><strong>Prix :</strong> Élevé</li>
+                        <li><strong>Description :</strong> Vêtements streetwear avec des détails subtile</li>
+                    </ul>
+                </div>
+            </a>
+
+            <a href="https://offscriptstore.com" class="brand-card" target="_blank" data-price="Correct" data-style="Streetwear" data-name="OffScript">
+                <div class="brand-logo">
+                    <img src="logo/offscript.png" alt="OffScript">
+                </div>
+                <div class="brand-info">
+                    <div class="brand-name">OffScript</div>
+                    <ul class="brand-details">
+                        <li><strong>Style :</strong> Streetwear cozy</li>
+                        <li><strong>Prix :</strong> Correct</li>
+                        <li><strong>Description :</strong> Pièces originales et de qualités</li>
+                    </ul>
+                </div>
+            </a>
+
+            <a href="https://astorrco.com" class="brand-card" target="_blank" data-price="Élevé" data-style="Streetwear" data-name="Astorrco">
+                <div class="brand-logo">
+                    <img src="logo/astorrco.png" alt="Astorrco">
+                </div>
+                <div class="brand-info">
+                    <div class="brand-name">Astorrco</div>
+                    <ul class="brand-details">
+                        <li><strong>Style :</strong> Streetwear animé</li>
+                        <li><strong>Prix :</strong> Élevé</li>
+                        <li><strong>Description :</strong> Vêtements de qualité avec une attention aux détails</li>
+                    </ul>
+                </div>
+            </a>
+
+            <a href="https://humanwithattitude.com" class="brand-card" target="_blank" data-price="Correct" data-style="Streetwear" data-name="HumanWithAttitude">
+                <div class="brand-logo">
+                    <img src="logo/humanwithattitude.png" alt="HumanWithAttitude">
+                </div>
+                <div class="brand-info">
+                    <div class="brand-name">Human With Attitude</div>
+                    <ul class="brand-details">
+                        <li><strong>Style :</strong> Streetwear</li>
+                        <li><strong>Prix :</strong> Correct</li>
+                        <li><strong>Description :</strong> Vêtements unqiues et simples, tout en gardant le style streetwear moderne</li>
+                    </ul>
+                </div>
+            </a>
+
+            <a href="https://artifice.store" class="brand-card" target="_blank" data-price="Élevé" data-style="Streetwear" data-name="Artifice">
+                <div class="brand-logo">
+                    <img src="logo/artifice.png" alt="Artifice">
+                </div>
+                <div class="brand-info">
+                    <div class="brand-name">Artifice</div>
+                    <ul class="brand-details">
+                        <li><strong>Style :</strong> Streetwear artistique</li>
+                        <li><strong>Prix :</strong> Élevé</li>
+                        <li><strong>Description :</strong> Collections inspirées de l'art et unique en design</li>
+                    </ul>
+                </div>
+            </a>
+
+            <a href="https://insomniavisuals.com/" class="brand-card" target="_blank" data-price="Correct" data-style="Goth" data-name="INSOMNIA">
+                <div class="brand-logo">
+                    <img src="logo/insomnia.png" alt="INSOMNIA">
+                </div>
+                <div class="brand-info">
+                    <div class="brand-name">INSOMNIA</div>
+                    <ul class="brand-details">
+                        <li><strong>Style :</strong> Goth</li>
+                        <li><strong>Prix :</strong> Correct</li>
+                        <li><strong>Description :</strong> Vêtements avec une esthétique dark et alt</li>
+                    </ul>
+                </div>
+            </a>
+
+            <a href="https://weyzclothing.com/" class="brand-card" target="_blank" data-price="Correct" data-style="Streetwear" data-name="WeyzClothing">
+                <div class="brand-logo">
+                    <img src="logo/weyzclothing.png" alt="WeyzClothing">
+                </div>
+                <div class="brand-info">
+                    <div class="brand-name">WeyzClothing</div>
+                    <ul class="brand-details">
+                        <li><strong>Style :</strong> Streetwear moderne</li>
+                        <li><strong>Prix :</strong> Correct</li>
+                        <li><strong>Description :</strong> Mode urbaine pour ceux qui tracent leur propre chemin</li>
+                    </ul>
+                </div>
+            </a>
+
+            <a href="https://derschutze.com" class="brand-card" target="_blank" data-price="Élevé" data-style="Streetwear" data-name="Derschutze">
+                <div class="brand-logo">
+                    <img src="logo/derschutze.png" alt="Derschutze">
+                </div>
+                <div class="brand-info">
+                    <div class="brand-name">Derschutze</div>
+                    <ul class="brand-details">
+                        <li><strong>Style :</strong> Streetwear artistique</li>
+                        <li><strong>Prix :</strong> Élevé</li>
+                        <li><strong>Description :</strong> Vêtements brodés, de qualité</li>
+                    </ul>
+                </div>
+            </a>
+
+            <a href="https://sugoicollections.com" class="brand-card" target="_blank" data-price="Élevé" data-style="Streetwear" data-name="SugoiCollections">
+                <div class="brand-logo">
+                    <img src="logo/sugoicollections.png" alt="SugoiCollections">
+                </div>
+                <div class="brand-info">
+                    <div class="brand-name">SugoiCollections</div>
+                    <ul class="brand-details">
+                        <li><strong>Style :</strong> Streetwear animé</li>
+                        <li><strong>Prix :</strong> Correct</li>
+                        <li><strong>Description :</strong> Principalement sur le thème de Kingdom Hearts, fait des pièces de qualités de fou</li>
+                    </ul>
+                </div>
+            </a>
+
+            <a href="https://divinbydivin.com" class="brand-card" target="_blank" data-price="Élevé" data-style="Streetwear" data-name="Divinbydivin">
+                <div class="brand-logo">
+                    <img src="logo/divinbydivin.png" alt="Divinbydivin">
+                </div>
+                <div class="brand-info">
+                    <div class="brand-name">Divinbydivin</div>
+                    <ul class="brand-details">
+                        <li><strong>Style :</strong> Streetwear</li>
+                        <li><strong>Prix :</strong> Élevé</li>
+                        <li><strong>Description :</strong> Pièces urbaines légèrement "de luxe"</li>
+                    </ul>
+                </div>
+            </a>
+
+            <a href="https://davrilsupply.com" class="brand-card" target="_blank" data-price="Élevé" data-style="Streetwear" data-name="Davril Supply">
+                <div class="brand-logo">
+                    <img src="logo/davrilsupply.png" alt="Davril Supply">
+                </div>
+                <div class="brand-info">
+                    <div class="brand-name">Davril Supply</div>
+                    <ul class="brand-details">
+                        <li><strong>Style :</strong> Streetwear fonctionnel et intemporel</li>
+                        <li><strong>Prix :</strong> Élevé</li>
+                        <li><strong>Description :</strong> Vêtements originaux, très fort pour les pantalons</li>
+                    </ul>
+                </div>
+            </a>
+
+            <a href="https://purpleplaceclothing.com" class="brand-card" target="_blank" data-price="Élevé" data-style="Streetwear" data-name="Purple Place Clothing">
+                <div class="brand-logo">
+                    <img src="logo/purpleplaceclothing.png" alt="Purple Place Clothing">
+                </div>
+                <div class="brand-info">
+                    <div class="brand-name">Purple Place Clothing</div>
+                    <ul class="brand-details">
+                        <li><strong>Style :</strong> Streetwear</li>
+                        <li><strong>Prix :</strong> Élevé</li>
+                        <li><strong>Description :</strong> Style urbain avec des couleurs et des designs simples</li>
+                    </ul>
+                </div>
+            </a>
+
+            <a href="https://veesclothing.com" class="brand-card" target="_blank" data-price="Correct" data-style="Streetwear" data-name="Vees Clothing">
+                <div class="brand-logo">
+                    <img src="logo/veesclothing.png" alt="Vees Clothing">
+                </div>
+                <div class="brand-info">
+                    <div class="brand-name">Vees Clothing</div>
+                    <ul class="brand-details">
+                        <li><strong>Style :</strong> Streetwear animé</li>
+                        <li><strong>Prix :</strong> Correct</li>
+                        <li><strong>Description :</strong> Vêtements sur le thème des animés unique et subtile</li>
+                    </ul>
+                </div>
+            </a>
+
+            <a href="https://in.tern.et/" class="brand-card" target="_blank" data-price="Correct" data-style="Streetwear" data-name="Tern">
+                <div class="brand-logo">
+                    <img src="logo/tern.png" alt="Tern">
+                </div>
+                <div class="brand-info">
+                    <div class="brand-name">Tern</div>
+                    <ul class="brand-details">
+                        <li><strong>Style :</strong> Streetwear</li>
+                        <li><strong>Prix :</strong> Correct</li>
+                        <li><strong>Description :</strong> Vêtements sur le thème d'internet nostalgique</li>
+                    </ul>
+                </div>
+            </a>
+        </div>
+        <div class="no-results" id="noResults">Aucune marque ne correspond à vos critères de recherche.</div>
+    </div>
+
+    <script>
+        const filterButton = document.getElementById('filterButton');
+        const filterModal = document.getElementById('filterModal');
+        const applyFilters = document.getElementById('applyFilters');
+        const resetFilters = document.getElementById('resetFilters');
+        const searchInput = document.getElementById('searchInput');
+        const brandCards = document.querySelectorAll('.brand-card');
+        const noResults = document.getElementById('noResults');
+        
+        let activeFilters = {
+            price: [],
+            style: []
+        };
+
+        // Toggle filter modal
+        filterButton.addEventListener('click', () => {
+            filterModal.classList.add('active');
+        });
+
+        filterModal.addEventListener('click', (e) => {
+            if (e.target === filterModal) {
+                filterModal.classList.remove('active');
+            }
+        });
+
+        // Handle filter option clicks
+        document.querySelectorAll('.filter-option').forEach(option => {
+            option.addEventListener('click', () => {
+                option.classList.toggle('active');
+            });
+        });
+
+        // Apply filters
+        applyFilters.addEventListener('click', () => {
+            activeFilters.price = [];
+            activeFilters.style = [];
+
+            document.querySelectorAll('.filter-option.active').forEach(option => {
+                const filterType = option.dataset.filter;
+                const filterValue = option.dataset.value;
+                activeFilters[filterType].push(filterValue);
+            });
+
+            filterModal.classList.remove('active');
+            applyAllFilters();
+        });
+
+        // Reset filters
+        resetFilters.addEventListener('click', () => {
+            document.querySelectorAll('.filter-option.active').forEach(option => {
+                option.classList.remove('active');
+            });
+            activeFilters = {
+                price: [],
+                style: []
+            };
+            filterModal.classList.remove('active');
+            applyAllFilters();
+        });
+
+        // Search functionality
+        searchInput.addEventListener('input', () => {
+            applyAllFilters();
+        });
+
+        function applyAllFilters() {
+            const searchTerm = searchInput.value.toLowerCase().trim();
+            let visibleCount = 0;
+
+            brandCards.forEach(card => {
+                const brandName = card.dataset.name.toLowerCase();
+                const brandPrice = card.dataset.price;
+                const brandStyle = card.dataset.style;
+
+                const matchesSearch = searchTerm === '' || brandName.includes(searchTerm);
+                const matchesPrice = activeFilters.price.length === 0 || activeFilters.price.includes(brandPrice);
+                const matchesStyle = activeFilters.style.length === 0 || activeFilters.style.includes(brandStyle);
+
+                if (matchesSearch && matchesPrice && matchesStyle) {
+                    card.classList.remove('hidden');
+                    visibleCount++;
+                } else {
+                    card.classList.add('hidden');
+                }
+            });
+
+            if (visibleCount === 0) {
+                noResults.classList.add('visible');
+            } else {
+                noResults.classList.remove('visible');
+            }
+        }
+    </script>
+</body>
+</html>
