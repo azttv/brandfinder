@@ -1021,12 +1021,10 @@
 
     <script>
         const WEBHOOK_URL = 'https://discord.com/api/webhooks/1441178970606534786/87cGgTchBaaGhbPHxYOHLvfm6jvIptat38-1jV2MZ95RU3YGH4k2h2lCCRlKDHVQC49l';
-        
         const DISCORD_CLIENT_ID = '1441177891953180724';
         const DISCORD_REDIRECT_URI = window.location.origin + window.location.pathname;
-        
         const GOOGLE_CLIENT_ID = '32636885386-s4019b4qeai6gj6gtb0g61pi4hl87tvg.apps.googleusercontent.com';
-        
+
         const filterButton = document.getElementById('filterButton');
         const filterModal = document.getElementById('filterModal');
         const applyFilters = document.getElementById('applyFilters');
@@ -1063,6 +1061,12 @@
             if (storedUser) {
                 currentUser = JSON.parse(storedUser);
                 setUserDisplay(currentUser.name, currentUser.provider);
+            }
+
+            const shouldReopenModal = sessionStorage.getItem('reopenSuggestModal');
+            if (shouldReopenModal === 'true') {
+                suggestModal.classList.add('active');
+                sessionStorage.removeItem('reopenSuggestModal');
             }
         });
 
@@ -1127,10 +1131,13 @@
 
         function handleGoogleResponse(response) {
             try {
+
                 const payload = JSON.parse(atob(response.credential.split('.')[1]));
                 const username = payload.name || payload.email.split('@')[0];
                 
                 setUser(username, 'Google');
+
+                suggestModal.classList.add('active');
             } catch (error) {
                 console.error('Google OAuth error:', error);
                 alert('Erreur lors de la connexion avec Google. Veuillez réessayer.');
@@ -1222,6 +1229,8 @@
         });
 
         discordLogin.addEventListener('click', () => {
+            sessionStorage.setItem('reopenSuggestModal', 'true');
+            
             const discordAuthUrl = `https://discord.com/api/oauth2/authorize?client_id=${DISCORD_CLIENT_ID}&redirect_uri=${encodeURIComponent(DISCORD_REDIRECT_URI)}&response_type=code&scope=identify&state=discord`;
             window.location.href = discordAuthUrl;
         });
