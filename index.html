@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BrandFinder - Marques</title>
+    <!-- Google Sign-In Library -->
     <script src="https://accounts.google.com/gsi/client" async defer></script>
-    <link rel="icon" type="image/png" href="favicon.png">
     <style>
         * {
             margin: 0;
@@ -702,11 +702,10 @@
 <body>
     <header>
         <nav>
-            <a href="index.html" class="active">Accueil</a>
-            <a href="marques.html">Marques</a>
+            <a href="index.html" class="active">Marques</a>
             <a href="vetements.html">Vêtements</a>
             <a href="accessoires.html">Accessoires</a>
-            <a href="info.html">À propos</a>
+            <a href="apropos.html">À propos</a>
         </nav>
     </header>
 
@@ -1022,10 +1021,12 @@
 
     <script>
         const WEBHOOK_URL = 'https://discord.com/api/webhooks/1441178970606534786/87cGgTchBaaGhbPHxYOHLvfm6jvIptat38-1jV2MZ95RU3YGH4k2h2lCCRlKDHVQC49l';
+        
         const DISCORD_CLIENT_ID = '1441177891953180724';
         const DISCORD_REDIRECT_URI = window.location.origin + window.location.pathname;
+        
         const GOOGLE_CLIENT_ID = '32636885386-s4019b4qeai6gj6gtb0g61pi4hl87tvg.apps.googleusercontent.com';
-
+        
         const filterButton = document.getElementById('filterButton');
         const filterModal = document.getElementById('filterModal');
         const applyFilters = document.getElementById('applyFilters');
@@ -1062,12 +1063,6 @@
             if (storedUser) {
                 currentUser = JSON.parse(storedUser);
                 setUserDisplay(currentUser.name, currentUser.provider);
-            }
-
-            const shouldReopenModal = sessionStorage.getItem('reopenSuggestModal');
-            if (shouldReopenModal === 'true') {
-                suggestModal.classList.add('active');
-                sessionStorage.removeItem('reopenSuggestModal');
             }
         });
 
@@ -1132,13 +1127,10 @@
 
         function handleGoogleResponse(response) {
             try {
-
                 const payload = JSON.parse(atob(response.credential.split('.')[1]));
                 const username = payload.name || payload.email.split('@')[0];
                 
                 setUser(username, 'Google');
-
-                suggestModal.classList.add('active');
             } catch (error) {
                 console.error('Google OAuth error:', error);
                 alert('Erreur lors de la connexion avec Google. Veuillez réessayer.');
@@ -1230,8 +1222,6 @@
         });
 
         discordLogin.addEventListener('click', () => {
-            sessionStorage.setItem('reopenSuggestModal', 'true');
-            
             const discordAuthUrl = `https://discord.com/api/oauth2/authorize?client_id=${DISCORD_CLIENT_ID}&redirect_uri=${encodeURIComponent(DISCORD_REDIRECT_URI)}&response_type=code&scope=identify&state=discord`;
             window.location.href = discordAuthUrl;
         });
@@ -1367,4 +1357,3 @@
     </script>
 </body>
 </html>
-
