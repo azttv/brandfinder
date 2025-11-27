@@ -214,20 +214,13 @@
             gap: 30px;
         }
 
-        .project-card {
-            background: rgba(40, 40, 60, 0.6);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(139, 92, 246, 0.3);
-            border-radius: 16px;
-            overflow: hidden;
-            transition: all 0.3s ease;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-            height: 250px;
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+.project-card {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    color: inherit;
+}
 
         .project-card:hover {
             transform: translateY(-8px);
@@ -348,17 +341,15 @@
         <!-- Projects Section -->
         <div class="projects-section">
             <h2>Mes Projets</h2>
-            <div class="projects-grid">
-                <div class="project-card with-bg" style="background-image: url('icons/bg.png');">
-                    <img src="icons/logo.png" alt="Project 1 Logo">
-                </div>
-                <div class="project-card with-bg" style="background-image: url('icons/bg2.png');">
-                    <img src="icons/logo2.png" alt="Project 2 Logo">
-                </div>
-                <div class="project-card with-bg" style="background-image: url('icons/bg3.png');">
-                    <img src="icons/logo3.png" alt="Project 3 Logo">
-                </div>
-            </div>
+<a href="https://www.true-vanilla.fr/" target="_blank" class="project-card with-bg" style="background-image: url('icons/bg.png');">
+    <img src="icons/logo.png" alt="Project 1 Logo">
+</a>
+<a href="https://brandfinder.fr/" target="_blank" class="project-card with-bg" style="background-image: url('icons/bg2.png');">
+    <img src="icons/logo2.png" alt="Project 2 Logo">
+</a>
+<a href="" target="_blank" class="project-card with-bg" style="background-image: url('icons/bg3.png');">
+    <img src="icons/logo3.png" alt="Project 3 Logo">
+</a>
         </div>
         <div class="contact-section" id="contact">
             <div class="card">
