@@ -1,10 +1,9 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>BrandFinder - À Propos</title>
-    <link rel="icon" type="image/png" href="favicon.png">
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     <style>
         * {
@@ -196,6 +195,7 @@
 
         .projects-section {
             animation: fadeIn 0.8s ease-out 0.4s backwards;
+            margin-top: 20px;
         }
 
         .projects-section h2 {
@@ -208,19 +208,41 @@
             background-clip: text;
         }
 
+        /* Changed projects-grid to flex for horizontal layout */
         .projects-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            display: flex;
             gap: 30px;
+            overflow-x: auto;
+            padding-bottom: 10px;
         }
 
-.project-card {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-decoration: none;
-    color: inherit;
-}
+        .projects-grid::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        .projects-grid::-webkit-scrollbar-thumb {
+            background: rgba(139, 92, 246, 0.5);
+            border-radius: 4px;
+        }
+
+        .project-card {
+            background: rgba(40, 40, 60, 0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 16px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            height: 250px;
+            width: 360px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: inherit;
+            flex-shrink: 0;
+        }
 
         .project-card:hover {
             transform: translateY(-8px);
@@ -299,10 +321,10 @@
 <body>
     <header>
         <nav>
-            <a href="index.html"">Marques</a>
+            <a href="index.html">Marques</a>
             <a href="vetements.html">Vêtements</a>
-            <a href="accessoires.html">Accessoires</a>
-            <a href="apropos.html" class="active">À propos</a>
+            <a href="accessoires.html">Accesoires</a>
+            <a href="apropos.html" class="active">À Propos</a>
         </nav>
     </header>
 
@@ -313,12 +335,12 @@
         <div class="cards-grid">
             <div class="card profile-card">
                 <div class="avatar">
-                    <img src="icons/pfp.png" alt="az_ttv">
+                    <img src="icons/pfp.png" alt="az_ttv" />
                 </div>
                 <h2>az_ttv</h2>
                 <div class="profile-title">Fondateur de BrandFinder</div>
                 <p>
-                    La plupart de mes potes me considèrent comme leurs styliste, car j'ai un style particulier et que je connais beaucoup de bonne marques. Donc si je peux aider, non seulement mes potes, mais aussi la plupart des personnes en recherche de style, alors j'hésiterais pas à apprendre un tout nouveau language de code pour leurs donner une plateforme parfaites pour les soutenirs 
+                    La plupart de mes potes me considèrent comme leurs styliste, car j'ai un style particulier et que je connais beaucoup de bonne marques. Donc si je peux aider, non seulement mes potes, mais aussi la plupart des personnes en recherche de style, alors j'hésiterais pas à apprendre un tout nouveau language de code pour leurs donner une plateforme parfaites pour les soutenirs.
                 </p>
                 <p style="margin-top: 15px; font-size: 14px; color: #a0a0a0;">
                     Sinon, je suis principalement Monteur Vidéo, Développeur Web (HTML, CSS, JavaScript), Développeur Minecraft (Java, Skript).
@@ -341,28 +363,33 @@
         <!-- Projects Section -->
         <div class="projects-section">
             <h2>Mes Projets</h2>
-<a href="https://www.true-vanilla.fr/" target="_blank" class="project-card with-bg" style="background-image: url('icons/bg.png');">
-    <img src="icons/logo.png" alt="Project 1 Logo">
-</a>
-<a href="https://brandfinder.fr/" target="_blank" class="project-card with-bg" style="background-image: url('icons/bg2.png');">
-    <img src="icons/logo2.png" alt="Project 2 Logo">
-</a>
-<a href="" target="_blank" class="project-card with-bg" style="background-image: url('icons/bg3.png');">
-    <img src="icons/logo3.png" alt="Project 3 Logo">
-</a>
+            <div class="projects-grid">
+                <a href="https://www.true-vanilla.fr" target="_blank" class="project-card with-bg" style="background-image: url('icons/bg.png');">
+                    <img src="icons/logo.png" alt="Project 1 Logo" />
+                </a>
+                <a href="https://brandfinder.fr" target="_blank" class="project-card with-bg" style="background-image: url('icons/bg2.png');">
+                    <img src="icons/logo2.png" alt="Project 2 Logo" />
+                </a>
+                <a href="https://???.com" target="_blank" class="project-card with-bg" style="background-image: url('icons/bg3.png');">
+                    <img src="icons/logo3.png" alt="Project 3 Logo" />
+                </a>
+            </div>
         </div>
+
+        <!-- Contact Section -->
         <div class="contact-section" id="contact">
             <div class="card">
                 <h2>Me contacter</h2>
+                <p>Tu peux me contacter ou suivre mon travail sur ces plateformes :</p>
                 <div class="contact-links">
-                    <a class="contact-link" href="https://instagram.com/amdewen" target="_blank" rel="noopener noreferrer">
+                    <a class="contact-link" href="https://instagram.com/TON_INSTAGRAM" target="_blank" rel="noopener noreferrer">
                         Instagram
                     </a>
-                    <a class="contact-link" href="https://discord.gg/SePrPE5tQ5" target="_blank" rel="noopener noreferrer">
+                    <a class="contact-link" href="https://discord.gg/TON_INVITE" target="_blank" rel="noopener noreferrer">
                         Discord
                     </a>
-                    <a class="contact-link" href="azttvcontact@gmail.com">
-                        azttvcontact@gmail.com
+                    <a class="contact-link" href="mailto:ton.email@exemple.com">
+                        Email
                     </a>
                 </div>
             </div>
