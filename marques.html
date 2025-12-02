@@ -1119,7 +1119,7 @@
     <!-- Header -->
     <header>
         <a href="index.html" class="logo">
-            <img src="img/logo2.png" alt="BrandFinder Logo">
+            <img src="img/logotext.png" alt="BrandFinder Logo">
         </a>
         <nav>
             <a href="index.html">Accueil</a>
@@ -1890,12 +1890,19 @@
 
             const priceLabels = { '1': '€ Prix bas', '2': '€€ Medium', '3': '€€€ Prix élevés' };
 
+            const discordUserDisplay = formData.discordUser.tag 
+                ? `${formData.discordUser.username}${formData.discordUser.tag}` 
+                : `@${formData.discordUser.username}`;
+
             const webhookData = {
                 embeds: [{
                     title: '🏷️ Nouvelle proposition de marque',
                     color: 9156863, // Purple color
+                    thumbnail: formData.discordUser.avatar ? {
+                        url: `https://cdn.discordapp.com/avatars/${formData.discordUser.id}/${formData.discordUser.avatar}.png`
+                    } : null,
                     fields: [
-                        { name: '👤 Proposé par', value: `${formData.discordUser.username}${formData.discordUser.tag}`, inline: true },
+                        { name: '👤 Proposé par', value: `${discordUserDisplay} (<@${formData.discordUser.id}>)`, inline: true },
                         { name: '🏪 Nom de la marque', value: formData.brandName, inline: true },
                         { name: '💰 Gamme de prix', value: priceLabels[formData.price], inline: true },
                         { name: '🎨 Style', value: formData.style, inline: true },
@@ -1907,6 +1914,11 @@
                 }]
             };
 
+            // Remove null thumbnail if no avatar
+            if (!webhookData.embeds[0].thumbnail) {
+                delete webhookData.embeds[0].thumbnail;
+            }
+
             if (formData.description) {
                 webhookData.embeds[0].fields.push({
                     name: '📝 Description',
@@ -1916,21 +1928,23 @@
             }
 
             try {
-                // Replace with your actual Discord webhook URL
-                const WEBHOOK_URL = 'https://discord.com/api/webhooks/1441178970606534786/87cGgTchBaaGhbPHxYOHLvfm6jvIptat38-1jV2MZ95RU3YGH4k2h2lCCRlKDHVQC49l';
-                
-                // For demo purposes, we'll simulate success
-                // In production, uncomment the fetch below and add your webhook URL
-                /*
+                if (WEBHOOK_URL === 'YOUR_DISCORD_WEBHOOK_URL_HERE') {
+                    alert('⚠️ Configuration requise!\n\nPour envoyer les propositions:\n\n1. Créez un webhook dans votre serveur Discord\n2. Copiez l\'URL du webhook\n3. Modifiez WEBHOOK_URL dans le code');
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = `
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M22 2 11 13M22 2l-7 20-4-9-9-4 20-7z"/>
+                        </svg>
+                        Envoyer la proposition
+                    `;
+                    return;
+                }
+
                 await fetch(WEBHOOK_URL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(webhookData)
                 });
-                */
-                
-                // Simulate network delay
-                await new Promise(resolve => setTimeout(resolve, 1500));
                 
                 currentStep = 5;
                 updateStepDisplay();
@@ -1951,5 +1965,4 @@
         renderBrands();
     </script>
 </body>
-
 </html>
