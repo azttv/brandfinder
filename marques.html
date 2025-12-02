@@ -1739,6 +1739,9 @@
         };
 
         const WEBHOOK_URL = 'https://discord.com/api/webhooks/1441178970606534786/87cGgTchBaaGhbPHxYOHLvfm6jvIptat38-1jV2MZ95RU3YGH4k2h2lCCRlKDHVQC49l';
+        
+        // Set to true to enable test mode (skip Discord OAuth)
+        const TEST_MODE = false;
         // ============================================
 
         // Generate OAuth URL
@@ -1821,8 +1824,26 @@
 
         // Discord Connect Button
         document.getElementById('discordConnectBtn').addEventListener('click', () => {
+            // Test mode - skip OAuth and use fake user
+            if (TEST_MODE) {
+                formData.discordUser = { 
+                    username: 'TestUser', 
+                    tag: '#0000',
+                    id: '123456789',
+                    avatar: null
+                };
+                
+                document.getElementById('discordConnectBtn').style.display = 'none';
+                document.getElementById('discordUser').style.display = 'flex';
+                document.getElementById('discordAvatar').textContent = 'T';
+                document.getElementById('discordUsername').textContent = 'TestUser (Mode Test)';
+                document.getElementById('discordTag').textContent = '#0000';
+                document.getElementById('step1Next').disabled = false;
+                return;
+            }
+
             if (DISCORD_CONFIG.CLIENT_ID === 'YOUR_CLIENT_ID_HERE') {
-                alert('⚠️ Configuration requise!\n\nPour activer la connexion Discord:\n\n1. Allez sur https://discord.com/developers/applications\n2. Créez une application ou utilisez une existante\n3. Dans OAuth2, ajoutez votre Redirect URI\n4. Copiez le Client ID\n5. Modifiez DISCORD_CONFIG.CLIENT_ID dans le code');
+                alert('⚠️ Configuration requise!\n\nPour activer la connexion Discord:\n\n1. Allez sur https://discord.com/developers/applications\n2. Créez une application ou utilisez une existante\n3. Dans OAuth2, ajoutez votre Redirect URI\n4. Copiez le Client ID\n5. Modifiez DISCORD_CONFIG.CLIENT_ID dans le code\n\n💡 Astuce: Activez TEST_MODE = true pour tester sans OAuth');
                 return;
             }
             window.location.href = getDiscordOAuthURL();
@@ -1885,6 +1906,25 @@
         // Submit to Discord Webhook
         document.getElementById('submitBtn').addEventListener('click', async () => {
             const submitBtn = document.getElementById('submitBtn');
+            
+            // Validate form data
+            if (!formData.discordUser) {
+                alert('Erreur: Vous devez vous connecter avec Discord.');
+                return;
+            }
+            if (!formData.brandName || !formData.brandName.trim()) {
+                alert('Erreur: Le nom de la marque est requis.');
+                return;
+            }
+            if (!formData.price) {
+                alert('Erreur: La gamme de prix est requise.');
+                return;
+            }
+            if (!formData.style) {
+                alert('Erreur: Le style est requis.');
+                return;
+            }
+
             submitBtn.disabled = true;
             submitBtn.innerHTML = '<div class="spinner"></div> Envoi en cours...';
 
@@ -1894,15 +1934,19 @@
                 ? `${formData.discordUser.username}${formData.discordUser.tag}` 
                 : `@${formData.discordUser.username}`;
 
+            // Build the "Proposé par" field value
+            let proposedByValue = discordUserDisplay;
+            if (formData.discordUser.id) {
+                proposedByValue += ` (<@${formData.discordUser.id}>)`;
+            }
+
             const webhookData = {
+                content: null,
                 embeds: [{
                     title: '🏷️ Nouvelle proposition de marque',
-                    color: 9156863, // Purple color
-                    thumbnail: formData.discordUser.avatar ? {
-                        url: `https://cdn.discordapp.com/avatars/${formData.discordUser.id}/${formData.discordUser.avatar}.png`
-                    } : null,
+                    color: 9156863,
                     fields: [
-                        { name: '👤 Proposé par', value: `${discordUserDisplay} (<@${formData.discordUser.id}>)`, inline: true },
+                        { name: '👤 Proposé par', value: proposedByValue, inline: true },
                         { name: '🏪 Nom de la marque', value: formData.brandName, inline: true },
                         { name: '💰 Gamme de prix', value: priceLabels[formData.price], inline: true },
                         { name: '🎨 Style', value: formData.style, inline: true },
@@ -1914,9 +1958,11 @@
                 }]
             };
 
-            // Remove null thumbnail if no avatar
-            if (!webhookData.embeds[0].thumbnail) {
-                delete webhookData.embeds[0].thumbnail;
+            // Add thumbnail only if avatar exists
+            if (formData.discordUser.avatar && formData.discordUser.id) {
+                webhookData.embeds[0].thumbnail = {
+                    url: `https://cdn.discordapp.com/avatars/${formData.discordUser.id}/${formData.discordUser.avatar}.png`
+                };
             }
 
             if (formData.description) {
@@ -1940,17 +1986,30 @@
                     return;
                 }
 
-                await fetch(WEBHOOK_URL, {
+                console.log('Sending webhook data:', webhookData);
+                console.log('To URL:', WEBHOOK_URL);
+
+                const response = await fetch(WEBHOOK_URL, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: { 
+                        'Content-Type': 'application/json'
+                    },
                     body: JSON.stringify(webhookData)
                 });
+
+                console.log('Response status:', response.status);
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error('Webhook error response:', errorText);
+                    throw new Error(`Webhook failed: ${response.status} - ${errorText}`);
+                }
                 
                 currentStep = 5;
                 updateStepDisplay();
             } catch (error) {
                 console.error('Error sending to webhook:', error);
-                alert('Une erreur est survenue. Veuillez réessayer.');
+                alert(`Une erreur est survenue: ${error.message}\n\nVérifiez la console pour plus de détails.`);
                 submitBtn.disabled = false;
                 submitBtn.innerHTML = `
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
