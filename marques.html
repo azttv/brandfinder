@@ -902,6 +902,271 @@
             color: var(--text-muted);
         }
 
+        /* Brand Detail Modal */
+        .brand-detail-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 250;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            padding: 2rem;
+        }
+
+        .brand-detail-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .brand-detail-modal {
+            background: white;
+            border-radius: 28px;
+            max-width: 650px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            transform: scale(0.9) translateY(30px);
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+
+        .brand-detail-overlay.active .brand-detail-modal {
+            transform: scale(1) translateY(0);
+        }
+
+        .brand-detail-header {
+            position: relative;
+            height: 200px;
+            background: linear-gradient(135deg, var(--purple-primary) 0%, var(--purple-dark) 100%);
+            border-radius: 28px 28px 0 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .brand-detail-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -30%;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%);
+        }
+
+        .brand-detail-header::after {
+            content: '';
+            position: absolute;
+            bottom: -30%;
+            left: -20%;
+            width: 250px;
+            height: 250px;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+        }
+
+        .brand-detail-logo {
+            font-family: 'Syne', sans-serif;
+            font-size: 5rem;
+            font-weight: 800;
+            color: white;
+            opacity: 0.9;
+            z-index: 1;
+        }
+
+        .brand-detail-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            width: 44px;
+            height: 44px;
+            border: none;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+
+        .brand-detail-close:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: rotate(90deg);
+        }
+
+        .brand-detail-tags {
+            position: absolute;
+            bottom: 1rem;
+            left: 1.5rem;
+            display: flex;
+            gap: 0.5rem;
+            z-index: 10;
+        }
+
+        .brand-detail-tag {
+            padding: 0.5rem 1rem;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 100px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .brand-detail-tag.style {
+            color: var(--purple-primary);
+        }
+
+        .brand-detail-tag.location {
+            color: var(--dark-slate);
+        }
+
+        .brand-detail-content {
+            padding: 2rem;
+        }
+
+        .brand-detail-title {
+            font-family: 'Syne', sans-serif;
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            color: var(--text-dark);
+        }
+
+        .brand-detail-subtitle {
+            color: var(--text-muted);
+            font-size: 1.05rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .brand-detail-info {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding: 1.25rem;
+            background: var(--off-white);
+            border-radius: 16px;
+        }
+
+        .brand-info-item {
+            text-align: center;
+        }
+
+        .brand-info-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            margin-bottom: 0.35rem;
+        }
+
+        .brand-info-value {
+            font-family: 'Syne', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .brand-detail-price {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .brand-detail-price-label {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .brand-detail-price-dots {
+            display: flex;
+            gap: 6px;
+        }
+
+        .brand-detail-price-dots .price-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #E5E7EB;
+            transition: all 0.3s ease;
+        }
+
+        .brand-detail-price-dots .price-dot.filled {
+            background: var(--purple-primary);
+        }
+
+        .brand-detail-price-text {
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .brand-detail-description {
+            font-size: 1rem;
+            line-height: 1.8;
+            color: var(--text-dark);
+            margin-bottom: 2rem;
+        }
+
+        .brand-detail-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .brand-detail-btn {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 1rem 1.5rem;
+            border-radius: 14px;
+            font-size: 1rem;
+            font-family: inherit;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .brand-detail-btn-primary {
+            background: var(--purple-primary);
+            color: white;
+            border: none;
+            box-shadow: 0 4px 20px rgba(139, 92, 246, 0.3);
+        }
+
+        .brand-detail-btn-primary:hover {
+            background: var(--purple-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(139, 92, 246, 0.4);
+        }
+
+        .brand-detail-btn-secondary {
+            background: transparent;
+            color: var(--text-dark);
+            border: 2px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .brand-detail-btn-secondary:hover {
+            border-color: var(--purple-primary);
+            color: var(--purple-primary);
+            background: rgba(139, 92, 246, 0.05);
+        }
+
         /* Footer */
         footer {
             background: var(--text-dark);
@@ -1110,6 +1375,55 @@
             }
 
             .form-buttons {
+                flex-direction: column;
+            }
+
+            /* Brand Detail Modal Mobile */
+            .brand-detail-overlay {
+                padding: 1rem;
+            }
+
+            .brand-detail-modal {
+                max-height: 95vh;
+                border-radius: 20px;
+            }
+
+            .brand-detail-header {
+                height: 160px;
+                border-radius: 20px 20px 0 0;
+            }
+
+            .brand-detail-logo {
+                font-size: 3.5rem;
+            }
+
+            .brand-detail-content {
+                padding: 1.5rem;
+            }
+
+            .brand-detail-title {
+                font-size: 1.5rem;
+            }
+
+            .brand-detail-info {
+                grid-template-columns: 1fr;
+                gap: 0.75rem;
+            }
+
+            .brand-info-item {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                text-align: left;
+                padding: 0.5rem 0;
+                border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            }
+
+            .brand-info-item:last-child {
+                border-bottom: none;
+            }
+
+            .brand-detail-actions {
                 flex-direction: column;
             }
         }
@@ -1456,6 +1770,70 @@
         </div>
     </div>
 
+    <!-- Brand Detail Modal -->
+    <div class="brand-detail-overlay" id="brandDetailOverlay">
+        <div class="brand-detail-modal">
+            <div class="brand-detail-header">
+                <button class="brand-detail-close" id="brandDetailClose">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M18 6 6 18M6 6l12 12"/>
+                    </svg>
+                </button>
+                <span class="brand-detail-logo" id="brandDetailLogo">C</span>
+                <div class="brand-detail-tags">
+                    <span class="brand-detail-tag style" id="brandDetailStyle">Streetwear</span>
+                    <span class="brand-detail-tag location" id="brandDetailLocation">🇺🇸 Am. Nord</span>
+                </div>
+            </div>
+            <div class="brand-detail-content">
+                <h2 class="brand-detail-title" id="brandDetailTitle">Carhartt WIP</h2>
+                <p class="brand-detail-subtitle" id="brandDetailSubtitle">Marque américaine de workwear revisité pour le streetwear moderne.</p>
+                
+                <div class="brand-detail-info">
+                    <div class="brand-info-item">
+                        <div class="brand-info-label">Fondée en</div>
+                        <div class="brand-info-value" id="brandDetailFounded">1989</div>
+                    </div>
+                    <div class="brand-info-item">
+                        <div class="brand-info-label">Origine</div>
+                        <div class="brand-info-value" id="brandDetailOrigin">États-Unis</div>
+                    </div>
+                    <div class="brand-info-item">
+                        <div class="brand-info-label">Gamme de prix</div>
+                        <div class="brand-info-value" id="brandDetailPriceText">€€ Medium</div>
+                    </div>
+                </div>
+
+                <div class="brand-detail-price">
+                    <span class="brand-detail-price-label">Niveau de prix :</span>
+                    <div class="brand-detail-price-dots" id="brandDetailPriceDots">
+                        <div class="price-dot filled"></div>
+                        <div class="price-dot filled"></div>
+                        <div class="price-dot"></div>
+                    </div>
+                </div>
+
+                <p class="brand-detail-description" id="brandDetailDescription">
+                    Description complète de la marque...
+                </p>
+
+                <div class="brand-detail-actions">
+                    <a href="#" class="brand-detail-btn brand-detail-btn-primary" id="brandDetailWebsite" target="_blank">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+                            <polyline points="15 3 21 3 21 9"/>
+                            <line x1="10" y1="14" x2="21" y2="3"/>
+                        </svg>
+                        Visiter le site
+                    </a>
+                    <button class="brand-detail-btn brand-detail-btn-secondary" id="brandDetailCloseBtn">
+                        Fermer
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Footer -->
     <footer>
         <div class="footer-content">
@@ -1514,30 +1892,30 @@
     <script>
         // Sample Brands Data
         const brands = [
-            { name: "Carhartt WIP", description: "Marque américaine de workwear revisité pour le streetwear moderne. Durabilité et style intemporel.", style: "streetwear", price: 2, location: "amerique-nord", image: null },
-            { name: "A.P.C.", description: "Marque parisienne emblématique du minimalisme français. Coupes épurées et denim de qualité.", style: "minimaliste", price: 3, location: "europe", image: null },
-            { name: "Stüssy", description: "Pionnière du streetwear californien depuis 1980. Culture surf et skate authentique.", style: "streetwear", price: 2, location: "amerique-nord", image: null },
-            { name: "Patagonia", description: "Leader de l'outdoor éco-responsable. Engagement environnemental et produits durables.", style: "eco", price: 2, location: "amerique-nord", image: null },
-            { name: "Acne Studios", description: "Label suédois de luxe contemporain. Créativité scandinave et design avant-gardiste.", style: "luxe", price: 3, location: "europe", image: null },
-            { name: "Uniqlo", description: "Basics japonais de qualité à prix accessible. Innovation textile et simplicité.", style: "casual", price: 1, location: "asie", image: null },
-            { name: "Nike", description: "Géant du sportswear et de la sneaker culture. Innovation et performance.", style: "sportswear", price: 2, location: "amerique-nord", image: null },
-            { name: "Veja", description: "Sneakers françaises éco-responsables. Transparence et production éthique.", style: "eco", price: 2, location: "europe", image: null },
-            { name: "Palace", description: "Skate brand londonienne au style décalé. Collaborations exclusives et humour britannique.", style: "streetwear", price: 2, location: "europe", image: null },
-            { name: "Maison Margiela", description: "Haute couture déconstructée et avant-gardiste. Art et mode fusionnés.", style: "luxe", price: 3, location: "europe", image: null },
-            { name: "The North Face", description: "Équipement outdoor technique et lifestyle. Performance en montagne et en ville.", style: "sportswear", price: 2, location: "amerique-nord", image: null },
-            { name: "COS", description: "Design scandinave accessible. Coupes architecturales et matières nobles.", style: "minimaliste", price: 2, location: "europe", image: null },
-            { name: "Comme des Garçons", description: "Vision radicale de la mode japonaise. Déconstruction et poésie vestimentaire.", style: "luxe", price: 3, location: "asie", image: null },
-            { name: "Levi's", description: "Icône du denim américain depuis 1853. Heritage et authenticité.", style: "casual", price: 2, location: "amerique-nord", image: null },
-            { name: "Off-White", description: "Streetwear de luxe par Virgil Abloh. Codes de la rue et haute couture.", style: "streetwear", price: 3, location: "europe", image: null },
-            { name: "Muji", description: "Design sans marque japonais. Fonctionnalité et esthétique épurée.", style: "minimaliste", price: 1, location: "asie", image: null },
-            { name: "Sandro", description: "Élégance parisienne contemporaine. Chic accessible et tendances maîtrisées.", style: "casual", price: 2, location: "europe", image: null },
-            { name: "Dickies", description: "Workwear américain authentique. Du chantier à la rue depuis 1922.", style: "vintage", price: 1, location: "amerique-nord", image: null },
-            { name: "Aimé Leon Dore", description: "Streetwear new-yorkais raffiné. Nostalgie des années 90 et élégance sportive.", style: "streetwear", price: 3, location: "amerique-nord", image: null },
-            { name: "Adidas", description: "Héritage sportif allemand et culture sneaker. Collaborations iconiques.", style: "sportswear", price: 2, location: "europe", image: null },
-            { name: "Isabel Marant", description: "Bohème chic parisien. Féminité décontractée et rock'n'roll.", style: "luxe", price: 3, location: "europe", image: null },
-            { name: "Everlane", description: "Transparence radicale et basics éthiques. Mode responsable accessible.", style: "eco", price: 2, location: "amerique-nord", image: null },
-            { name: "BAPE", description: "Streetwear japonais culte. Camouflage iconique et éditions limitées.", style: "streetwear", price: 3, location: "asie", image: null },
-            { name: "Arket", description: "Essentiels nordiques durables. Qualité et design intemporel.", style: "minimaliste", price: 2, location: "europe", image: null }
+            { name: "Carhartt WIP", description: "Marque américaine de workwear revisité pour le streetwear moderne. Durabilité et style intemporel.", fullDescription: "Carhartt Work In Progress est la branche européenne de Carhartt, fondée en 1989. Elle réinterprète les classiques du workwear américain pour une clientèle urbaine et streetwear. Connue pour ses vestes iconiques, ses pantalons cargo et ses beanies, la marque allie durabilité exceptionnelle et esthétique décontractée.", style: "streetwear", price: 2, location: "amerique-nord", website: "https://www.carhartt-wip.com", founded: "1989", origin: "États-Unis / Europe", image: null },
+            { name: "A.P.C.", description: "Marque parisienne emblématique du minimalisme français. Coupes épurées et denim de qualité.", fullDescription: "Atelier de Production et de Création, fondé par Jean Touitou en 1987, incarne l'élégance parisienne sans effort. La marque est célèbre pour son denim brut de haute qualité, ses coupes épurées et son approche minimaliste de la mode. A.P.C. privilégie les matières nobles et la durabilité.", style: "minimaliste", price: 3, location: "europe", website: "https://www.apc.fr", founded: "1987", origin: "France", image: null },
+            { name: "Stüssy", description: "Pionnière du streetwear californien depuis 1980. Culture surf et skate authentique.", fullDescription: "Fondée par Shawn Stussy à Laguna Beach, Stüssy est considérée comme l'une des marques fondatrices du streetwear. Née de la culture surf californienne, elle a évolué pour embrasser le skate, le hip-hop et la mode urbaine. Son logo signature est devenu une icône mondiale.", style: "streetwear", price: 2, location: "amerique-nord", website: "https://www.stussy.com", founded: "1980", origin: "États-Unis", image: null },
+            { name: "Patagonia", description: "Leader de l'outdoor éco-responsable. Engagement environnemental et produits durables.", fullDescription: "Patagonia, fondée par Yvon Chouinard, est pionnière de la mode éco-responsable. La marque reverse 1% de ses ventes à des causes environnementales et encourage la réparation plutôt que le remplacement. Ses produits outdoor allient performance technique et durabilité exceptionnelle.", style: "eco", price: 2, location: "amerique-nord", website: "https://www.patagonia.com", founded: "1973", origin: "États-Unis", image: null },
+            { name: "Acne Studios", description: "Label suédois de luxe contemporain. Créativité scandinave et design avant-gardiste.", fullDescription: "Acne Studios, fondé à Stockholm en 1996, est devenu un acteur majeur du luxe contemporain. La marque est connue pour son approche multidisciplinaire, mêlant mode, photographie et art. Ses écharpes en laine et son denim sont particulièrement prisés.", style: "luxe", price: 3, location: "europe", website: "https://www.acnestudios.com", founded: "1996", origin: "Suède", image: null },
+            { name: "Uniqlo", description: "Basics japonais de qualité à prix accessible. Innovation textile et simplicité.", fullDescription: "Uniqlo, géant japonais du retail, propose des vêtements essentiels de qualité à prix démocratique. La marque est reconnue pour ses innovations textiles comme HEATTECH et AIRism, ainsi que ses collaborations avec des designers renommés. Philosophie LifeWear : des vêtements simples et durables.", style: "casual", price: 1, location: "asie", website: "https://www.uniqlo.com", founded: "1984", origin: "Japon", image: null },
+            { name: "Nike", description: "Géant du sportswear et de la sneaker culture. Innovation et performance.", fullDescription: "Nike, fondée par Phil Knight et Bill Bowerman, est devenue la plus grande marque de sportswear au monde. Au-delà de la performance athlétique, Nike a révolutionné la sneaker culture avec des modèles iconiques comme l'Air Jordan, Air Max et Dunk. Innovation constante et marketing légendaire.", style: "sportswear", price: 2, location: "amerique-nord", website: "https://www.nike.com", founded: "1964", origin: "États-Unis", image: null },
+            { name: "Veja", description: "Sneakers françaises éco-responsables. Transparence et production éthique.", fullDescription: "Veja, marque française fondée en 2005, a révolutionné l'industrie de la sneaker avec son approche transparente et éthique. Utilisant du caoutchouc sauvage d'Amazonie et du coton bio, Veja prouve que style et responsabilité peuvent coexister. Fabriquées au Brésil dans des conditions équitables.", style: "eco", price: 2, location: "europe", website: "https://www.veja-store.com", founded: "2005", origin: "France", image: null },
+            { name: "Palace", description: "Skate brand londonienne au style décalé. Collaborations exclusives et humour britannique.", fullDescription: "Palace Skateboards, fondée à Londres par Lev Tanju, est devenue une référence du streetwear britannique. Connue pour son logo Tri-Ferg, son humour décalé et ses vidéos de skate cultes, Palace collabore régulièrement avec des marques comme Adidas, Ralph Lauren et Gucci.", style: "streetwear", price: 2, location: "europe", website: "https://www.palaceskateboards.com", founded: "2009", origin: "Royaume-Uni", image: null },
+            { name: "Maison Margiela", description: "Haute couture déconstructée et avant-gardiste. Art et mode fusionnés.", fullDescription: "Fondée par Martin Margiela en 1988, la maison est célèbre pour sa déconstruction des codes de la mode, son anonymat délibéré et son approche conceptuelle. Les célèbres Tabi boots et la ligne Replica sont devenues des icônes. Aujourd'hui dirigée par John Galliano.", style: "luxe", price: 3, location: "europe", website: "https://www.maisonmargiela.com", founded: "1988", origin: "France / Belgique", image: null },
+            { name: "The North Face", description: "Équipement outdoor technique et lifestyle. Performance en montagne et en ville.", fullDescription: "The North Face, fondée à San Francisco, équipe les alpinistes et explorateurs depuis plus de 50 ans. La marque a su conquérir le marché streetwear avec ses doudounes Nuptse et ses collaborations Supreme. Alliance parfaite entre technique outdoor et style urbain.", style: "sportswear", price: 2, location: "amerique-nord", website: "https://www.thenorthface.com", founded: "1966", origin: "États-Unis", image: null },
+            { name: "COS", description: "Design scandinave accessible. Coupes architecturales et matières nobles.", fullDescription: "COS (Collection Of Style), lancée par le groupe H&M en 2007, propose une mode minimaliste et intemporelle inspirée du design scandinave. La marque privilégie les coupes architecturales, les matières de qualité et une palette de couleurs sobres. Mode accessible et sophistiquée.", style: "minimaliste", price: 2, location: "europe", website: "https://www.cos.com", founded: "2007", origin: "Suède", image: null },
+            { name: "Comme des Garçons", description: "Vision radicale de la mode japonaise. Déconstruction et poésie vestimentaire.", fullDescription: "Rei Kawakubo a fondé Comme des Garçons en 1969, révolutionnant la mode avec sa vision avant-gardiste. La marque challenge constamment les conventions avec des silhouettes déstructurées et une esthétique unique. CDG PLAY avec son cœur iconique est devenu un phénomène streetwear.", style: "luxe", price: 3, location: "asie", website: "https://www.comme-des-garcons.com", founded: "1969", origin: "Japon", image: null },
+            { name: "Levi's", description: "Icône du denim américain depuis 1853. Heritage et authenticité.", fullDescription: "Levi Strauss & Co. a inventé le jean en 1873, créant un vêtement devenu universel. Le 501 reste le jean le plus iconique de l'histoire. Levi's incarne l'authenticité américaine et continue d'innover tout en préservant son héritage. Programme Wellthread pour une mode plus durable.", style: "casual", price: 2, location: "amerique-nord", website: "https://www.levi.com", founded: "1853", origin: "États-Unis", image: null },
+            { name: "Off-White", description: "Streetwear de luxe par Virgil Abloh. Codes de la rue et haute couture.", fullDescription: "Off-White, créée par le regretté Virgil Abloh en 2012, a redéfini le luxe streetwear. Reconnaissable à ses bandes diagonales et ses guillemets ironiques, la marque fusionne culture de rue et haute couture. Collaborations légendaires avec Nike, IKEA et Louis Vuitton.", style: "streetwear", price: 3, location: "europe", website: "https://www.off---white.com", founded: "2012", origin: "Italie", image: null },
+            { name: "Muji", description: "Design sans marque japonais. Fonctionnalité et esthétique épurée.", fullDescription: "Muji, contraction de 'Mujirushi Ryohin' (produits de qualité sans marque), incarne la philosophie japonaise du moins c'est plus. La marque propose des vêtements essentiels, fonctionnels et intemporels, sans logo apparent. Matières naturelles et couleurs neutres.", style: "minimaliste", price: 1, location: "asie", website: "https://www.muji.com", founded: "1980", origin: "Japon", image: null },
+            { name: "Sandro", description: "Élégance parisienne contemporaine. Chic accessible et tendances maîtrisées.", fullDescription: "Sandro, fondée par Evelyne Chétrite en 1984, propose une mode parisienne accessible. La marque capture l'essence du chic français avec des pièces élégantes et tendance. Matières de qualité, coupes flatteuses et attention aux détails caractérisent chaque collection.", style: "casual", price: 2, location: "europe", website: "https://www.sandro-paris.com", founded: "1984", origin: "France", image: null },
+            { name: "Dickies", description: "Workwear américain authentique. Du chantier à la rue depuis 1922.", fullDescription: "Dickies, fondée au Texas en 1922, habille les travailleurs américains depuis plus d'un siècle. Adoptée par les skateurs et la scène hip-hop, la marque est devenue un pilier du streetwear. Ses pantalons 874 et ses chemises de travail sont des classiques indémodables.", style: "vintage", price: 1, location: "amerique-nord", website: "https://www.dickies.com", founded: "1922", origin: "États-Unis", image: null },
+            { name: "Aimé Leon Dore", description: "Streetwear new-yorkais raffiné. Nostalgie des années 90 et élégance sportive.", fullDescription: "Aimé Leon Dore, fondée par Teddy Santis à Queens, New York, mêle nostalgie des années 90, héritage grec et élégance sportive. La marque est connue pour ses collaborations avec New Balance et son café/boutique emblématique à Nolita. Streetwear sophistiqué et community-driven.", style: "streetwear", price: 3, location: "amerique-nord", website: "https://www.aimeleondore.com", founded: "2014", origin: "États-Unis", image: null },
+            { name: "Adidas", description: "Héritage sportif allemand et culture sneaker. Collaborations iconiques.", fullDescription: "Adidas, fondée par Adi Dassler en 1949, est un pilier du sport et de la mode. Des trois bandes aux Superstar et Stan Smith, la marque a marqué l'histoire de la sneaker. Collaborations légendaires avec Kanye West (Yeezy), Pharrell Williams et plus récemment Wales Bonner.", style: "sportswear", price: 2, location: "europe", website: "https://www.adidas.com", founded: "1949", origin: "Allemagne", image: null },
+            { name: "Isabel Marant", description: "Bohème chic parisien. Féminité décontractée et rock'n'roll.", fullDescription: "Isabel Marant incarne le cool parisien depuis 1994. Sa mode bohème-chic, avec une touche rock'n'roll, a conquis le monde. Les sneakers compensées Bekket ont lancé une tendance mondiale. Style effortless, matières nobles et silhouettes flatteuses.", style: "luxe", price: 3, location: "europe", website: "https://www.isabelmarant.com", founded: "1994", origin: "France", image: null },
+            { name: "Everlane", description: "Transparence radicale et basics éthiques. Mode responsable accessible.", fullDescription: "Everlane a révolutionné la mode en révélant le coût réel de chaque produit. La marque propose des essentiels de qualité, fabriqués dans des usines éthiques à des prix transparents. Engagement fort pour réduire l'utilisation de plastique vierge d'ici 2021.", style: "eco", price: 2, location: "amerique-nord", website: "https://www.everlane.com", founded: "2010", origin: "États-Unis", image: null },
+            { name: "BAPE", description: "Streetwear japonais culte. Camouflage iconique et éditions limitées.", fullDescription: "A Bathing Ape (BAPE), fondée par Nigo à Tokyo, est une légende du streetwear japonais. Son camouflage distinctif, le shark hoodie et les sneakers BAPESTA sont devenus des icônes. Éditions ultra-limitées et collaborations exclusives alimentent le hype mondial.", style: "streetwear", price: 3, location: "asie", website: "https://www.bape.com", founded: "1993", origin: "Japon", image: null },
+            { name: "Arket", description: "Essentiels nordiques durables. Qualité et design intemporel.", fullDescription: "Arket, lancée par le groupe H&M en 2017, propose une mode minimaliste et durable inspirée des pays nordiques. La marque se concentre sur des essentiels de qualité, des matières durables et un design intemporel. Aussi connue pour ses cafés végétariens en boutique.", style: "minimaliste", price: 2, location: "europe", website: "https://www.arket.com", founded: "2017", origin: "Suède", image: null }
         ];
 
         // State
@@ -1593,7 +1971,7 @@
                 return;
             }
 
-            brandsGrid.innerHTML = filtered.map(brand => {
+            brandsGrid.innerHTML = filtered.map((brand, index) => {
                 const priceLabels = { 1: '€ Prix bas', 2: '€€ Medium', 3: '€€€ Élevé' };
                 const styleLabels = {
                     streetwear: 'Streetwear',
@@ -1611,8 +1989,11 @@
                     'asie': '🇯🇵 Asie'
                 };
 
+                // Find the original index in the brands array
+                const originalIndex = brands.findIndex(b => b.name === brand.name);
+
                 return `
-                    <div class="brand-card">
+                    <div class="brand-card" data-brand-index="${originalIndex}">
                         <div class="brand-image">
                             <div class="brand-tags">
                                 <span class="brand-tag style">${styleLabels[brand.style]}</span>
@@ -1637,7 +2018,95 @@
                     </div>
                 `;
             }).join('');
+
+            // Add click event listeners to brand cards
+            document.querySelectorAll('.brand-card').forEach(card => {
+                card.addEventListener('click', () => {
+                    const brandIndex = parseInt(card.dataset.brandIndex);
+                    openBrandDetail(brandIndex);
+                });
+            });
         }
+
+        // Brand Detail Modal Functions
+        const brandDetailOverlay = document.getElementById('brandDetailOverlay');
+        const brandDetailClose = document.getElementById('brandDetailClose');
+        const brandDetailCloseBtn = document.getElementById('brandDetailCloseBtn');
+
+        const styleLabels = {
+            streetwear: 'Streetwear',
+            luxe: 'Luxe',
+            casual: 'Casual',
+            sportswear: 'Sportswear',
+            vintage: 'Vintage',
+            minimaliste: 'Minimaliste',
+            eco: 'Éco-responsable'
+        };
+
+        const locationLabels = {
+            'europe': '🇪🇺 Europe',
+            'amerique-nord': '🇺🇸 Amérique du Nord',
+            'amerique-sud': '🇧🇷 Amérique du Sud',
+            'asie': '🇯🇵 Asie'
+        };
+
+        const priceLabels = { 1: '€ Prix bas', 2: '€€ Medium', 3: '€€€ Prix élevés' };
+
+        function openBrandDetail(brandIndex) {
+            const brand = brands[brandIndex];
+            if (!brand) return;
+
+            // Populate modal with brand data
+            document.getElementById('brandDetailLogo').textContent = brand.name.charAt(0);
+            document.getElementById('brandDetailTitle').textContent = brand.name;
+            document.getElementById('brandDetailSubtitle').textContent = brand.description;
+            document.getElementById('brandDetailStyle').textContent = styleLabels[brand.style] || brand.style;
+            document.getElementById('brandDetailLocation').textContent = locationLabels[brand.location] || brand.location;
+            document.getElementById('brandDetailFounded').textContent = brand.founded || 'N/A';
+            document.getElementById('brandDetailOrigin').textContent = brand.origin || 'N/A';
+            document.getElementById('brandDetailPriceText').textContent = priceLabels[brand.price] || 'N/A';
+            document.getElementById('brandDetailDescription').textContent = brand.fullDescription || brand.description;
+            
+            // Update price dots
+            const priceDots = document.getElementById('brandDetailPriceDots');
+            priceDots.innerHTML = [1, 2, 3].map(i => 
+                `<div class="price-dot ${i <= brand.price ? 'filled' : ''}"></div>`
+            ).join('');
+
+            // Update website link
+            const websiteBtn = document.getElementById('brandDetailWebsite');
+            if (brand.website) {
+                websiteBtn.href = brand.website;
+                websiteBtn.style.display = 'flex';
+            } else {
+                websiteBtn.style.display = 'none';
+            }
+
+            // Show modal
+            brandDetailOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeBrandDetail() {
+            brandDetailOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // Brand detail modal event listeners
+        brandDetailClose.addEventListener('click', closeBrandDetail);
+        brandDetailCloseBtn.addEventListener('click', closeBrandDetail);
+        brandDetailOverlay.addEventListener('click', (e) => {
+            if (e.target === brandDetailOverlay) closeBrandDetail();
+        });
+
+        // Close modal with Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                if (brandDetailOverlay.classList.contains('active')) {
+                    closeBrandDetail();
+                }
+            }
+        });
 
         // Filter dropdowns
         document.querySelectorAll('.filter-group').forEach(group => {
@@ -1739,9 +2208,6 @@
         };
 
         const WEBHOOK_URL = 'https://discord.com/api/webhooks/1441178970606534786/87cGgTchBaaGhbPHxYOHLvfm6jvIptat38-1jV2MZ95RU3YGH4k2h2lCCRlKDHVQC49l';
-        
-        // Set to true to enable test mode (skip Discord OAuth)
-        const TEST_MODE = false;
         // ============================================
 
         // Generate OAuth URL
@@ -1824,26 +2290,8 @@
 
         // Discord Connect Button
         document.getElementById('discordConnectBtn').addEventListener('click', () => {
-            // Test mode - skip OAuth and use fake user
-            if (TEST_MODE) {
-                formData.discordUser = { 
-                    username: 'TestUser', 
-                    tag: '#0000',
-                    id: '123456789',
-                    avatar: null
-                };
-                
-                document.getElementById('discordConnectBtn').style.display = 'none';
-                document.getElementById('discordUser').style.display = 'flex';
-                document.getElementById('discordAvatar').textContent = 'T';
-                document.getElementById('discordUsername').textContent = 'TestUser (Mode Test)';
-                document.getElementById('discordTag').textContent = '#0000';
-                document.getElementById('step1Next').disabled = false;
-                return;
-            }
-
-            if (DISCORD_CONFIG.CLIENT_ID === 'YOUR_CLIENT_ID_HERE') {
-                alert('⚠️ Configuration requise!\n\nPour activer la connexion Discord:\n\n1. Allez sur https://discord.com/developers/applications\n2. Créez une application ou utilisez une existante\n3. Dans OAuth2, ajoutez votre Redirect URI\n4. Copiez le Client ID\n5. Modifiez DISCORD_CONFIG.CLIENT_ID dans le code\n\n💡 Astuce: Activez TEST_MODE = true pour tester sans OAuth');
+            if (DISCORD_CONFIG.CLIENT_ID === '1441177891953180724') {
+                alert('⚠️ Configuration requise!\n\nPour activer la connexion Discord:\n\n1. Allez sur https://discord.com/developers/applications\n2. Créez une application ou utilisez une existante\n3. Dans OAuth2, ajoutez votre Redirect URI\n4. Copiez le Client ID\n5. Modifiez DISCORD_CONFIG.CLIENT_ID dans le code');
                 return;
             }
             window.location.href = getDiscordOAuthURL();
@@ -1906,47 +2354,17 @@
         // Submit to Discord Webhook
         document.getElementById('submitBtn').addEventListener('click', async () => {
             const submitBtn = document.getElementById('submitBtn');
-            
-            // Validate form data
-            if (!formData.discordUser) {
-                alert('Erreur: Vous devez vous connecter avec Discord.');
-                return;
-            }
-            if (!formData.brandName || !formData.brandName.trim()) {
-                alert('Erreur: Le nom de la marque est requis.');
-                return;
-            }
-            if (!formData.price) {
-                alert('Erreur: La gamme de prix est requise.');
-                return;
-            }
-            if (!formData.style) {
-                alert('Erreur: Le style est requis.');
-                return;
-            }
-
             submitBtn.disabled = true;
             submitBtn.innerHTML = '<div class="spinner"></div> Envoi en cours...';
 
             const priceLabels = { '1': '€ Prix bas', '2': '€€ Medium', '3': '€€€ Prix élevés' };
 
-            const discordUserDisplay = formData.discordUser.tag 
-                ? `${formData.discordUser.username}${formData.discordUser.tag}` 
-                : `@${formData.discordUser.username}`;
-
-            // Build the "Proposé par" field value
-            let proposedByValue = discordUserDisplay;
-            if (formData.discordUser.id) {
-                proposedByValue += ` (<@${formData.discordUser.id}>)`;
-            }
-
             const webhookData = {
-                content: null,
                 embeds: [{
                     title: '🏷️ Nouvelle proposition de marque',
-                    color: 9156863,
+                    color: 9156863, // Purple color
                     fields: [
-                        { name: '👤 Proposé par', value: proposedByValue, inline: true },
+                        { name: '👤 Proposé par', value: `${formData.discordUser.username}${formData.discordUser.tag}`, inline: true },
                         { name: '🏪 Nom de la marque', value: formData.brandName, inline: true },
                         { name: '💰 Gamme de prix', value: priceLabels[formData.price], inline: true },
                         { name: '🎨 Style', value: formData.style, inline: true },
@@ -1958,13 +2376,6 @@
                 }]
             };
 
-            // Add thumbnail only if avatar exists
-            if (formData.discordUser.avatar && formData.discordUser.id) {
-                webhookData.embeds[0].thumbnail = {
-                    url: `https://cdn.discordapp.com/avatars/${formData.discordUser.id}/${formData.discordUser.avatar}.png`
-                };
-            }
-
             if (formData.description) {
                 webhookData.embeds[0].fields.push({
                     name: '📝 Description',
@@ -1974,42 +2385,27 @@
             }
 
             try {
-                if (WEBHOOK_URL === 'YOUR_DISCORD_WEBHOOK_URL_HERE') {
-                    alert('⚠️ Configuration requise!\n\nPour envoyer les propositions:\n\n1. Créez un webhook dans votre serveur Discord\n2. Copiez l\'URL du webhook\n3. Modifiez WEBHOOK_URL dans le code');
-                    submitBtn.disabled = false;
-                    submitBtn.innerHTML = `
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M22 2 11 13M22 2l-7 20-4-9-9-4 20-7z"/>
-                        </svg>
-                        Envoyer la proposition
-                    `;
-                    return;
-                }
-
-                console.log('Sending webhook data:', webhookData);
-                console.log('To URL:', WEBHOOK_URL);
-
-                const response = await fetch(WEBHOOK_URL, {
+                // Replace with your actual Discord webhook URL
+                const WEBHOOK_URL = 'https://discord.com/api/webhooks/1441178970606534786/87cGgTchBaaGhbPHxYOHLvfm6jvIptat38-1jV2MZ95RU3YGH4k2h2lCCRlKDHVQC49l';
+                
+                // For demo purposes, we'll simulate success
+                // In production, uncomment the fetch below and add your webhook URL
+                /*
+                await fetch(WEBHOOK_URL, {
                     method: 'POST',
-                    headers: { 
-                        'Content-Type': 'application/json'
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(webhookData)
                 });
-
-                console.log('Response status:', response.status);
-
-                if (!response.ok) {
-                    const errorText = await response.text();
-                    console.error('Webhook error response:', errorText);
-                    throw new Error(`Webhook failed: ${response.status} - ${errorText}`);
-                }
+                */
+                
+                // Simulate network delay
+                await new Promise(resolve => setTimeout(resolve, 1500));
                 
                 currentStep = 5;
                 updateStepDisplay();
             } catch (error) {
                 console.error('Error sending to webhook:', error);
-                alert(`Une erreur est survenue: ${error.message}\n\nVérifiez la console pour plus de détails.`);
+                alert('Une erreur est survenue. Veuillez réessayer.');
                 submitBtn.disabled = false;
                 submitBtn.innerHTML = `
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
