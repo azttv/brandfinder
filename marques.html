@@ -211,12 +211,87 @@
         .filters-row {
             display: flex;
             gap: 1rem;
-            flex-wrap: wrap;
+            flex-wrap: nowrap;
             align-items: center;
         }
 
         .filter-group {
             position: relative;
+            flex-shrink: 0;
+        }
+
+        .clear-filters {
+            padding: 0.75rem 1.25rem;
+            border: 2px solid rgba(0, 0, 0, 0.08);
+            border-radius: 12px;
+            background: white;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            font-family: inherit;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+            white-space: nowrap;
+        }
+
+        .clear-filters:hover {
+            border-color: var(--purple-primary);
+            color: var(--purple-primary);
+            background: rgba(139, 92, 246, 0.05);
+        }
+
+        .results-count {
+            margin-left: auto;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            flex-shrink: 0;
+            white-space: nowrap;
+        }
+
+        .results-count strong {
+            color: var(--purple-primary);
+            font-weight: 700;
+        }
+
+        /* Back to Top Button */
+        .back-to-top {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 50px;
+            height: 50px;
+            background: var(--purple-primary);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 20px rgba(139, 92, 246, 0.4);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(20px);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 100;
+        }
+
+        .back-to-top:hover {
+            background: var(--purple-dark);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(139, 92, 246, 0.5);
+        }
+
+        .back-to-top.visible {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .back-to-top svg {
+            width: 24px;
+            height: 24px;
         }
 
         .filter-btn {
@@ -325,31 +400,6 @@
             opacity: 1;
         }
 
-        .clear-filters {
-            padding: 0.75rem 1.25rem;
-            background: transparent;
-            border: none;
-            color: var(--text-muted);
-            font-size: 0.9rem;
-            font-family: inherit;
-            cursor: pointer;
-            transition: color 0.3s ease;
-        }
-
-        .clear-filters:hover {
-            color: var(--purple-primary);
-        }
-
-        .results-count {
-            margin-left: auto;
-            font-size: 0.95rem;
-            color: var(--text-muted);
-        }
-
-        .results-count strong {
-            color: var(--text-dark);
-        }
-
         /* Brands Grid */
         .brands-section {
             padding: 3rem 4rem;
@@ -379,7 +429,10 @@
 
         .brand-image {
             height: 180px;
-            background: linear-gradient(135deg, var(--off-white) 0%, #E5E7EB 100%);
+            background-color: linear-gradient(135deg, var(--off-white) 0%, #E5E7EB 100%);
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -387,18 +440,71 @@
             overflow: hidden;
         }
 
+        .brand-image-blur {
+            position: absolute;
+            top: -20px;
+            left: -20px;
+            right: -20px;
+            bottom: -20px;
+            background-image: inherit;
+            background-size: 300%;
+            background-position: center;
+            filter: blur(30px) saturate(1.3) brightness(1.1);
+            z-index: 0;
+        }
+
+        .brand-image::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0.1) 100%);
+            z-index: 1;
+        }
+
         .brand-image img {
             max-width: 70%;
             max-height: 70%;
             object-fit: contain;
+            position: relative;
+            z-index: 2;
+        }
+
+        .brand-image .brand-logo-img {
+            max-width: 55%;
+            max-height: 55%;
+            object-fit: contain;
+            border-radius: 12px;
+            transition: transform 0.3s ease;
+            background: white;
+            padding: 12px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+            position: relative;
+            z-index: 2;
+        }
+
+        .brand-card:hover .brand-logo-img {
+            transform: scale(1.08);
         }
 
         .brand-image .placeholder-logo {
             font-family: 'Syne', sans-serif;
-            font-size: 2rem;
+            font-size: 3rem;
             font-weight: 700;
             color: var(--dark-slate);
-            opacity: 0.6;
+            opacity: 0.5;
+            width: 80px;
+            height: 80px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            z-index: 2;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
         }
 
         .brand-tags {
@@ -408,6 +514,7 @@
             display: flex;
             gap: 0.5rem;
             flex-wrap: wrap;
+            z-index: 3;
         }
 
         .brand-tag {
@@ -973,13 +1080,37 @@
             background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
         }
 
+        .brand-detail-logo-container {
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .brand-detail-logo-img {
+            max-width: 120px;
+            max-height: 120px;
+            object-fit: contain;
+            border-radius: 16px;
+            background: white;
+            padding: 1rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
+
         .brand-detail-logo {
             font-family: 'Syne', sans-serif;
-            font-size: 5rem;
+            font-size: 4rem;
             font-weight: 800;
             color: white;
             opacity: 0.9;
-            z-index: 1;
+            width: 100px;
+            height: 100px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(10px);
         }
 
         .brand-detail-close {
@@ -1325,29 +1456,39 @@
 
             .search-filters {
                 top: 70px;
+                padding: 1.5rem 1rem;
             }
 
             .filters-row {
-                flex-direction: column;
-                align-items: stretch;
-            }
-
-            .filter-group {
-                width: 100%;
+                flex-wrap: wrap;
+                gap: 0.75rem;
             }
 
             .filter-btn {
-                width: 100%;
-                justify-content: space-between;
+                padding: 0.6rem 1rem;
+                font-size: 0.85rem;
             }
 
             .filter-dropdown {
-                width: 100%;
+                min-width: 200px;
             }
 
             .results-count {
-                margin-left: 0;
+                width: 100%;
+                text-align: center;
                 margin-top: 0.5rem;
+            }
+
+            .clear-filters {
+                padding: 0.6rem 1rem;
+                font-size: 0.85rem;
+            }
+
+            .back-to-top {
+                bottom: 1.5rem;
+                right: 1.5rem;
+                width: 45px;
+                height: 45px;
             }
 
             .brands-grid {
@@ -1440,7 +1581,7 @@
             <a href="marques.html" class="active">Marques</a>
             <a href="#">Vêtements</a>
             <a href="#">Accessoires</a>
-            <a href="#">À propos</a>
+            <a href="apropos.html">À propos</a>
         </nav>
     </header>
 
@@ -1518,13 +1659,29 @@
                         </div>
                         <span>Minimaliste</span>
                     </div>
-                    <div class="filter-option" data-value="eco">
+                    <div class="filter-option" data-value="anime">
                         <div class="filter-checkbox">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
                                 <polyline points="20 6 9 17 4 12"></polyline>
                             </svg>
                         </div>
-                        <span>Éco-responsable</span>
+                        <span>Anime</span>
+                    </div>
+                    <div class="filter-option" data-value="goth">
+                        <div class="filter-checkbox">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
+                        </div>
+                        <span>Goth</span>
+                    </div>
+                    <div class="filter-option" data-value="fancy">
+                        <div class="filter-checkbox">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
+                        </div>
+                        <span>Fancy</span>
                     </div>
                 </div>
             </div>
@@ -1779,7 +1936,10 @@
                         <path d="M18 6 6 18M6 6l12 12"/>
                     </svg>
                 </button>
-                <span class="brand-detail-logo" id="brandDetailLogo">C</span>
+                <div class="brand-detail-logo-container" id="brandDetailLogoContainer">
+                    <img class="brand-detail-logo-img" id="brandDetailLogoImg" src="" alt="" style="display: none;">
+                    <span class="brand-detail-logo" id="brandDetailLogo">C</span>
+                </div>
                 <div class="brand-detail-tags">
                     <span class="brand-detail-tag style" id="brandDetailStyle">Streetwear</span>
                     <span class="brand-detail-tag location" id="brandDetailLocation">🇺🇸 Am. Nord</span>
@@ -1889,33 +2049,54 @@
         </div>
     </footer>
 
+    <!-- Back to Top Button -->
+    <button class="back-to-top" id="backToTop" aria-label="Retour en haut">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 15l-6-6-6 6"/>
+        </svg>
+    </button>
+
     <script>
         // Sample Brands Data
         const brands = [
-            { name: "Carhartt WIP", description: "Marque américaine de workwear revisité pour le streetwear moderne. Durabilité et style intemporel.", fullDescription: "Carhartt Work In Progress est la branche européenne de Carhartt, fondée en 1989. Elle réinterprète les classiques du workwear américain pour une clientèle urbaine et streetwear. Connue pour ses vestes iconiques, ses pantalons cargo et ses beanies, la marque allie durabilité exceptionnelle et esthétique décontractée.", style: "streetwear", price: 2, location: "amerique-nord", website: "https://www.carhartt-wip.com", founded: "1989", origin: "États-Unis / Europe", image: null },
-            { name: "A.P.C.", description: "Marque parisienne emblématique du minimalisme français. Coupes épurées et denim de qualité.", fullDescription: "Atelier de Production et de Création, fondé par Jean Touitou en 1987, incarne l'élégance parisienne sans effort. La marque est célèbre pour son denim brut de haute qualité, ses coupes épurées et son approche minimaliste de la mode. A.P.C. privilégie les matières nobles et la durabilité.", style: "minimaliste", price: 3, location: "europe", website: "https://www.apc.fr", founded: "1987", origin: "France", image: null },
-            { name: "Stüssy", description: "Pionnière du streetwear californien depuis 1980. Culture surf et skate authentique.", fullDescription: "Fondée par Shawn Stussy à Laguna Beach, Stüssy est considérée comme l'une des marques fondatrices du streetwear. Née de la culture surf californienne, elle a évolué pour embrasser le skate, le hip-hop et la mode urbaine. Son logo signature est devenu une icône mondiale.", style: "streetwear", price: 2, location: "amerique-nord", website: "https://www.stussy.com", founded: "1980", origin: "États-Unis", image: null },
-            { name: "Patagonia", description: "Leader de l'outdoor éco-responsable. Engagement environnemental et produits durables.", fullDescription: "Patagonia, fondée par Yvon Chouinard, est pionnière de la mode éco-responsable. La marque reverse 1% de ses ventes à des causes environnementales et encourage la réparation plutôt que le remplacement. Ses produits outdoor allient performance technique et durabilité exceptionnelle.", style: "eco", price: 2, location: "amerique-nord", website: "https://www.patagonia.com", founded: "1973", origin: "États-Unis", image: null },
-            { name: "Acne Studios", description: "Label suédois de luxe contemporain. Créativité scandinave et design avant-gardiste.", fullDescription: "Acne Studios, fondé à Stockholm en 1996, est devenu un acteur majeur du luxe contemporain. La marque est connue pour son approche multidisciplinaire, mêlant mode, photographie et art. Ses écharpes en laine et son denim sont particulièrement prisés.", style: "luxe", price: 3, location: "europe", website: "https://www.acnestudios.com", founded: "1996", origin: "Suède", image: null },
-            { name: "Uniqlo", description: "Basics japonais de qualité à prix accessible. Innovation textile et simplicité.", fullDescription: "Uniqlo, géant japonais du retail, propose des vêtements essentiels de qualité à prix démocratique. La marque est reconnue pour ses innovations textiles comme HEATTECH et AIRism, ainsi que ses collaborations avec des designers renommés. Philosophie LifeWear : des vêtements simples et durables.", style: "casual", price: 1, location: "asie", website: "https://www.uniqlo.com", founded: "1984", origin: "Japon", image: null },
-            { name: "Nike", description: "Géant du sportswear et de la sneaker culture. Innovation et performance.", fullDescription: "Nike, fondée par Phil Knight et Bill Bowerman, est devenue la plus grande marque de sportswear au monde. Au-delà de la performance athlétique, Nike a révolutionné la sneaker culture avec des modèles iconiques comme l'Air Jordan, Air Max et Dunk. Innovation constante et marketing légendaire.", style: "sportswear", price: 2, location: "amerique-nord", website: "https://www.nike.com", founded: "1964", origin: "États-Unis", image: null },
-            { name: "Veja", description: "Sneakers françaises éco-responsables. Transparence et production éthique.", fullDescription: "Veja, marque française fondée en 2005, a révolutionné l'industrie de la sneaker avec son approche transparente et éthique. Utilisant du caoutchouc sauvage d'Amazonie et du coton bio, Veja prouve que style et responsabilité peuvent coexister. Fabriquées au Brésil dans des conditions équitables.", style: "eco", price: 2, location: "europe", website: "https://www.veja-store.com", founded: "2005", origin: "France", image: null },
-            { name: "Palace", description: "Skate brand londonienne au style décalé. Collaborations exclusives et humour britannique.", fullDescription: "Palace Skateboards, fondée à Londres par Lev Tanju, est devenue une référence du streetwear britannique. Connue pour son logo Tri-Ferg, son humour décalé et ses vidéos de skate cultes, Palace collabore régulièrement avec des marques comme Adidas, Ralph Lauren et Gucci.", style: "streetwear", price: 2, location: "europe", website: "https://www.palaceskateboards.com", founded: "2009", origin: "Royaume-Uni", image: null },
-            { name: "Maison Margiela", description: "Haute couture déconstructée et avant-gardiste. Art et mode fusionnés.", fullDescription: "Fondée par Martin Margiela en 1988, la maison est célèbre pour sa déconstruction des codes de la mode, son anonymat délibéré et son approche conceptuelle. Les célèbres Tabi boots et la ligne Replica sont devenues des icônes. Aujourd'hui dirigée par John Galliano.", style: "luxe", price: 3, location: "europe", website: "https://www.maisonmargiela.com", founded: "1988", origin: "France / Belgique", image: null },
-            { name: "The North Face", description: "Équipement outdoor technique et lifestyle. Performance en montagne et en ville.", fullDescription: "The North Face, fondée à San Francisco, équipe les alpinistes et explorateurs depuis plus de 50 ans. La marque a su conquérir le marché streetwear avec ses doudounes Nuptse et ses collaborations Supreme. Alliance parfaite entre technique outdoor et style urbain.", style: "sportswear", price: 2, location: "amerique-nord", website: "https://www.thenorthface.com", founded: "1966", origin: "États-Unis", image: null },
-            { name: "COS", description: "Design scandinave accessible. Coupes architecturales et matières nobles.", fullDescription: "COS (Collection Of Style), lancée par le groupe H&M en 2007, propose une mode minimaliste et intemporelle inspirée du design scandinave. La marque privilégie les coupes architecturales, les matières de qualité et une palette de couleurs sobres. Mode accessible et sophistiquée.", style: "minimaliste", price: 2, location: "europe", website: "https://www.cos.com", founded: "2007", origin: "Suède", image: null },
-            { name: "Comme des Garçons", description: "Vision radicale de la mode japonaise. Déconstruction et poésie vestimentaire.", fullDescription: "Rei Kawakubo a fondé Comme des Garçons en 1969, révolutionnant la mode avec sa vision avant-gardiste. La marque challenge constamment les conventions avec des silhouettes déstructurées et une esthétique unique. CDG PLAY avec son cœur iconique est devenu un phénomène streetwear.", style: "luxe", price: 3, location: "asie", website: "https://www.comme-des-garcons.com", founded: "1969", origin: "Japon", image: null },
-            { name: "Levi's", description: "Icône du denim américain depuis 1853. Heritage et authenticité.", fullDescription: "Levi Strauss & Co. a inventé le jean en 1873, créant un vêtement devenu universel. Le 501 reste le jean le plus iconique de l'histoire. Levi's incarne l'authenticité américaine et continue d'innover tout en préservant son héritage. Programme Wellthread pour une mode plus durable.", style: "casual", price: 2, location: "amerique-nord", website: "https://www.levi.com", founded: "1853", origin: "États-Unis", image: null },
-            { name: "Off-White", description: "Streetwear de luxe par Virgil Abloh. Codes de la rue et haute couture.", fullDescription: "Off-White, créée par le regretté Virgil Abloh en 2012, a redéfini le luxe streetwear. Reconnaissable à ses bandes diagonales et ses guillemets ironiques, la marque fusionne culture de rue et haute couture. Collaborations légendaires avec Nike, IKEA et Louis Vuitton.", style: "streetwear", price: 3, location: "europe", website: "https://www.off---white.com", founded: "2012", origin: "Italie", image: null },
-            { name: "Muji", description: "Design sans marque japonais. Fonctionnalité et esthétique épurée.", fullDescription: "Muji, contraction de 'Mujirushi Ryohin' (produits de qualité sans marque), incarne la philosophie japonaise du moins c'est plus. La marque propose des vêtements essentiels, fonctionnels et intemporels, sans logo apparent. Matières naturelles et couleurs neutres.", style: "minimaliste", price: 1, location: "asie", website: "https://www.muji.com", founded: "1980", origin: "Japon", image: null },
-            { name: "Sandro", description: "Élégance parisienne contemporaine. Chic accessible et tendances maîtrisées.", fullDescription: "Sandro, fondée par Evelyne Chétrite en 1984, propose une mode parisienne accessible. La marque capture l'essence du chic français avec des pièces élégantes et tendance. Matières de qualité, coupes flatteuses et attention aux détails caractérisent chaque collection.", style: "casual", price: 2, location: "europe", website: "https://www.sandro-paris.com", founded: "1984", origin: "France", image: null },
-            { name: "Dickies", description: "Workwear américain authentique. Du chantier à la rue depuis 1922.", fullDescription: "Dickies, fondée au Texas en 1922, habille les travailleurs américains depuis plus d'un siècle. Adoptée par les skateurs et la scène hip-hop, la marque est devenue un pilier du streetwear. Ses pantalons 874 et ses chemises de travail sont des classiques indémodables.", style: "vintage", price: 1, location: "amerique-nord", website: "https://www.dickies.com", founded: "1922", origin: "États-Unis", image: null },
-            { name: "Aimé Leon Dore", description: "Streetwear new-yorkais raffiné. Nostalgie des années 90 et élégance sportive.", fullDescription: "Aimé Leon Dore, fondée par Teddy Santis à Queens, New York, mêle nostalgie des années 90, héritage grec et élégance sportive. La marque est connue pour ses collaborations avec New Balance et son café/boutique emblématique à Nolita. Streetwear sophistiqué et community-driven.", style: "streetwear", price: 3, location: "amerique-nord", website: "https://www.aimeleondore.com", founded: "2014", origin: "États-Unis", image: null },
-            { name: "Adidas", description: "Héritage sportif allemand et culture sneaker. Collaborations iconiques.", fullDescription: "Adidas, fondée par Adi Dassler en 1949, est un pilier du sport et de la mode. Des trois bandes aux Superstar et Stan Smith, la marque a marqué l'histoire de la sneaker. Collaborations légendaires avec Kanye West (Yeezy), Pharrell Williams et plus récemment Wales Bonner.", style: "sportswear", price: 2, location: "europe", website: "https://www.adidas.com", founded: "1949", origin: "Allemagne", image: null },
-            { name: "Isabel Marant", description: "Bohème chic parisien. Féminité décontractée et rock'n'roll.", fullDescription: "Isabel Marant incarne le cool parisien depuis 1994. Sa mode bohème-chic, avec une touche rock'n'roll, a conquis le monde. Les sneakers compensées Bekket ont lancé une tendance mondiale. Style effortless, matières nobles et silhouettes flatteuses.", style: "luxe", price: 3, location: "europe", website: "https://www.isabelmarant.com", founded: "1994", origin: "France", image: null },
-            { name: "Everlane", description: "Transparence radicale et basics éthiques. Mode responsable accessible.", fullDescription: "Everlane a révolutionné la mode en révélant le coût réel de chaque produit. La marque propose des essentiels de qualité, fabriqués dans des usines éthiques à des prix transparents. Engagement fort pour réduire l'utilisation de plastique vierge d'ici 2021.", style: "eco", price: 2, location: "amerique-nord", website: "https://www.everlane.com", founded: "2010", origin: "États-Unis", image: null },
-            { name: "BAPE", description: "Streetwear japonais culte. Camouflage iconique et éditions limitées.", fullDescription: "A Bathing Ape (BAPE), fondée par Nigo à Tokyo, est une légende du streetwear japonais. Son camouflage distinctif, le shark hoodie et les sneakers BAPESTA sont devenus des icônes. Éditions ultra-limitées et collaborations exclusives alimentent le hype mondial.", style: "streetwear", price: 3, location: "asie", website: "https://www.bape.com", founded: "1993", origin: "Japon", image: null },
-            { name: "Arket", description: "Essentiels nordiques durables. Qualité et design intemporel.", fullDescription: "Arket, lancée par le groupe H&M en 2017, propose une mode minimaliste et durable inspirée des pays nordiques. La marque se concentre sur des essentiels de qualité, des matières durables et un design intemporel. Aussi connue pour ses cafés végétariens en boutique.", style: "minimaliste", price: 2, location: "europe", website: "https://www.arket.com", founded: "2017", origin: "Suède", image: null }
+            // New brands from uploaded file
+            { name: "Sora Clothing", description: "Streetwear animé avec un style urbain poussé et des designs inspirés de la culture japonaise.", fullDescription: "Sora Clothing propose des vêtements urbains avec un style basé sur les animés, offrant des pièces plus élaborées que d'autres marques du genre. La marque se distingue par son attention aux détails et ses designs uniques qui fusionnent streetwear et culture anime.", style: "anime", price: 3, location: "europe", website: "https://soraclothing.com", founded: "2020", origin: "France", logo: "img/logo/soraclothing.png" },
+            { name: "Tuko Clothing", description: "Streetwear animé avec des détails subtils et une qualité premium.", fullDescription: "Tuko Clothing crée des vêtements streetwear avec des références anime subtiles et élégantes. La marque privilégie la qualité des matériaux et des finitions pour offrir des pièces durables et stylées qui plaisent aux fans de culture japonaise.", style: "anime", price: 3, location: "europe", website: "https://tukoclothing.com", founded: "2019", origin: "France", logo: "img/logo/tukoclothing.png" },
+            { name: "OffScript", description: "Streetwear cozy avec des pièces originales et de qualité.", fullDescription: "OffScript propose des pièces streetwear originales axées sur le confort et la qualité. La marque se démarque par ses designs uniques et son approche cozy du streetwear moderne, parfait pour un style décontracté mais soigné.", style: "streetwear", price: 2, location: "europe", website: "https://offscriptstore.com", founded: "2021", origin: "France", logo: "img/logo/offscript.png" },
+            { name: "Astorrco", description: "Streetwear animé haut de gamme avec une attention particulière aux détails.", fullDescription: "Astorrco propose des vêtements de qualité supérieure inspirés de la culture anime. Chaque pièce est conçue avec une attention méticuleuse aux détails, offrant des designs raffinés qui se démarquent dans l'univers du streetwear anime.", style: "anime", price: 3, location: "europe", website: "https://astorrco.com", founded: "2020", origin: "France", logo: "img/logo/astorrco.png" },
+            { name: "HumanWithAttitude", description: "Streetwear moderne avec des designs uniques et simples.", fullDescription: "HumanWithAttitude crée des vêtements uniques et simples tout en conservant l'essence du streetwear moderne. La marque propose des pièces qui allient originalité et simplicité pour un style urbain affirmé.", style: "streetwear", price: 2, location: "europe", website: "https://humanwithattitude.com", founded: "2019", origin: "France", logo: "img/logo/humanwithattitude.png" },
+            { name: "Artifice", description: "Streetwear artistique avec des collections inspirées de l'art.", fullDescription: "Artifice propose des collections streetwear uniques inspirées par l'art et le design. Chaque pièce est une création originale qui fusionne mode urbaine et expression artistique pour des looks distinctifs.", style: "streetwear", price: 3, location: "europe", website: "https://artifice.store", founded: "2018", origin: "France", logo: "img/logo/artifice.png" },
+            { name: "INSOMNIA", description: "Mode urbaine sombre et mystérieuse avec une esthétique dark et alternative.", fullDescription: "INSOMNIA Visuals propose des vêtements avec une esthétique dark et alternative. La marque se spécialise dans la mode urbaine sombre et mystérieuse, parfaite pour ceux qui cherchent un style unique et audacieux.", style: "goth", price: 3, location: "europe", website: "https://insomniavisuals.com", founded: "2020", origin: "France", logo: "logo/insomnia.png" },
+            { name: "WeyzClothing", description: "Streetwear moderne pour ceux qui tracent leur propre chemin.", fullDescription: "WeyzClothing propose une mode urbaine moderne destinée à ceux qui veulent se démarquer. La marque offre des pièces streetwear contemporaines avec une identité forte et des designs qui encouragent l'individualité.", style: "streetwear", price: 2, location: "europe", website: "https://weyzclothing.com", founded: "2021", origin: "France", logo: "logo/weyzclothing.png" },
+            { name: "Derschutze", description: "Streetwear technique et fonctionnel alliant style et performance.", fullDescription: "Derschutze crée des vêtements urbains qui allient style et fonctionnalité. La marque se spécialise dans le streetwear technique avec des pièces performantes et esthétiques pour un look urbain moderne.", style: "streetwear", price: 3, location: "europe", website: "https://derschutze.com", founded: "2019", origin: "Allemagne", logo: "logo/derschutze.png" },
+            { name: "SugoiCollections", description: "Streetwear inspiré de la culture japonaise avec des influences orientales.", fullDescription: "SugoiCollections propose des collections uniques mêlant influences orientales et streetwear urbain. La marque s'inspire profondément de la culture japonaise pour créer des pièces originales et captivantes.", style: "anime", price: 3, location: "europe", website: "https://sugoicollections.com", founded: "2020", origin: "France", logo: "logo/sugoicollections.png" },
+            { name: "Divinbydivin", description: "Mode streetwear élégante et raffinée avec une touche de luxe.", fullDescription: "Divinbydivin propose des pièces urbaines avec une touche de luxe et de sophistication. La marque crée des vêtements streetwear élégants qui élèvent le style urbain vers quelque chose de plus raffiné.", style: "fancy", price: 3, location: "europe", website: "https://divinbydivin.com", founded: "2021", origin: "France", logo: "logo/divinbydivin.png" },
+            { name: "Davril Supply", description: "Streetwear fonctionnel et intemporel pour le quotidien urbain.", fullDescription: "Davril Supply propose des vêtements essentiels pour le quotidien urbain. La marque se concentre sur des pièces streetwear fonctionnelles et intemporelles qui traversent les saisons avec style.", style: "streetwear", price: 2, location: "europe", website: "https://davrilsupply.com", founded: "2020", origin: "France", logo: "logo/davrilsupply.png" },
+            { name: "Purple Place Clothing", description: "Streetwear coloré et vibrant avec des designs énergiques.", fullDescription: "Purple Place Clothing propose une mode urbaine audacieuse avec des couleurs vibrantes et des designs énergiques. La marque se démarque par son approche colorée du streetwear.", style: "streetwear", price: 3, location: "europe", website: "https://purpleplaceclothing.com", founded: "2021", origin: "France", logo: "logo/purpleplaceclothing.png" },
+            { name: "Vees Clothing", description: "Streetwear contemporain et accessible alliant qualité et style.", fullDescription: "Vees Clothing propose des vêtements urbains qui allient qualité et style à un prix accessible. La marque crée des pièces streetwear contemporaines pour tous les jours.", style: "streetwear", price: 2, location: "europe", website: "https://veesclothing.com", founded: "2020", origin: "France", logo: "logo/veesclothing.png" },
+            
+            // Original brands (keeping the best ones, removing eco-focused ones)
+            { name: "Carhartt WIP", description: "Marque américaine de workwear revisité pour le streetwear moderne. Durabilité et style intemporel.", fullDescription: "Carhartt Work In Progress est la branche européenne de Carhartt, fondée en 1989. Elle réinterprète les classiques du workwear américain pour une clientèle urbaine et streetwear. Connue pour ses vestes iconiques, ses pantalons cargo et ses beanies, la marque allie durabilité exceptionnelle et esthétique décontractée.", style: "streetwear", price: 2, location: "amerique-nord", website: "https://www.carhartt-wip.com", founded: "1989", origin: "États-Unis / Europe", logo: "https://logo.clearbit.com/carhartt-wip.com" },
+            { name: "A.P.C.", description: "Marque parisienne emblématique du minimalisme français. Coupes épurées et denim de qualité.", fullDescription: "Atelier de Production et de Création, fondé par Jean Touitou en 1987, incarne l'élégance parisienne sans effort. La marque est célèbre pour son denim brut de haute qualité, ses coupes épurées et son approche minimaliste de la mode. A.P.C. privilégie les matières nobles et la durabilité.", style: "minimaliste", price: 3, location: "europe", website: "https://www.apc.fr", founded: "1987", origin: "France", logo: "https://logo.clearbit.com/apc.fr" },
+            { name: "Stüssy", description: "Pionnière du streetwear californien depuis 1980. Culture surf et skate authentique.", fullDescription: "Fondée par Shawn Stussy à Laguna Beach, Stüssy est considérée comme l'une des marques fondatrices du streetwear. Née de la culture surf californienne, elle a évolué pour embrasser le skate, le hip-hop et la mode urbaine. Son logo signature est devenu une icône mondiale.", style: "streetwear", price: 2, location: "amerique-nord", website: "https://www.stussy.com", founded: "1980", origin: "États-Unis", logo: "https://logo.clearbit.com/stussy.com" },
+            { name: "Acne Studios", description: "Label suédois de luxe contemporain. Créativité scandinave et design avant-gardiste.", fullDescription: "Acne Studios, fondé à Stockholm en 1996, est devenu un acteur majeur du luxe contemporain. La marque est connue pour son approche multidisciplinaire, mêlant mode, photographie et art. Ses écharpes en laine et son denim sont particulièrement prisés.", style: "luxe", price: 3, location: "europe", website: "https://www.acnestudios.com", founded: "1996", origin: "Suède", logo: "https://logo.clearbit.com/acnestudios.com" },
+            { name: "Uniqlo", description: "Basics japonais de qualité à prix accessible. Innovation textile et simplicité.", fullDescription: "Uniqlo, géant japonais du retail, propose des vêtements essentiels de qualité à prix démocratique. La marque est reconnue pour ses innovations textiles comme HEATTECH et AIRism, ainsi que ses collaborations avec des designers renommés. Philosophie LifeWear : des vêtements simples et durables.", style: "casual", price: 1, location: "asie", website: "https://www.uniqlo.com", founded: "1984", origin: "Japon", logo: "https://logo.clearbit.com/uniqlo.com" },
+            { name: "Nike", description: "Géant du sportswear et de la sneaker culture. Innovation et performance.", fullDescription: "Nike, fondée par Phil Knight et Bill Bowerman, est devenue la plus grande marque de sportswear au monde. Au-delà de la performance athlétique, Nike a révolutionné la sneaker culture avec des modèles iconiques comme l'Air Jordan, Air Max et Dunk. Innovation constante et marketing légendaire.", style: "sportswear", price: 2, location: "amerique-nord", website: "https://www.nike.com", founded: "1964", origin: "États-Unis", logo: "https://logo.clearbit.com/nike.com" },
+            { name: "Palace", description: "Skate brand londonienne au style décalé. Collaborations exclusives et humour britannique.", fullDescription: "Palace Skateboards, fondée à Londres par Lev Tanju, est devenue une référence du streetwear britannique. Connue pour son logo Tri-Ferg, son humour décalé et ses vidéos de skate cultes, Palace collabore régulièrement avec des marques comme Adidas, Ralph Lauren et Gucci.", style: "streetwear", price: 2, location: "europe", website: "https://www.palaceskateboards.com", founded: "2009", origin: "Royaume-Uni", logo: "https://logo.clearbit.com/palaceskateboards.com" },
+            { name: "Maison Margiela", description: "Haute couture déconstructée et avant-gardiste. Art et mode fusionnés.", fullDescription: "Fondée par Martin Margiela en 1988, la maison est célèbre pour sa déconstruction des codes de la mode, son anonymat délibéré et son approche conceptuelle. Les célèbres Tabi boots et la ligne Replica sont devenues des icônes. Aujourd'hui dirigée par John Galliano.", style: "luxe", price: 3, location: "europe", website: "https://www.maisonmargiela.com", founded: "1988", origin: "France / Belgique", logo: "https://logo.clearbit.com/maisonmargiela.com" },
+            { name: "The North Face", description: "Équipement outdoor technique et lifestyle. Performance en montagne et en ville.", fullDescription: "The North Face, fondée à San Francisco, équipe les alpinistes et explorateurs depuis plus de 50 ans. La marque a su conquérir le marché streetwear avec ses doudounes Nuptse et ses collaborations Supreme. Alliance parfaite entre technique outdoor et style urbain.", style: "sportswear", price: 2, location: "amerique-nord", website: "https://www.thenorthface.com", founded: "1966", origin: "États-Unis", logo: "https://logo.clearbit.com/thenorthface.com" },
+            { name: "COS", description: "Design scandinave accessible. Coupes architecturales et matières nobles.", fullDescription: "COS (Collection Of Style), lancée par le groupe H&M en 2007, propose une mode minimaliste et intemporelle inspirée du design scandinave. La marque privilégie les coupes architecturales, les matières de qualité et une palette de couleurs sobres. Mode accessible et sophistiquée.", style: "minimaliste", price: 2, location: "europe", website: "https://www.cos.com", founded: "2007", origin: "Suède", logo: "https://logo.clearbit.com/cos.com" },
+            { name: "Comme des Garçons", description: "Vision radicale de la mode japonaise. Déconstruction et poésie vestimentaire.", fullDescription: "Rei Kawakubo a fondé Comme des Garçons en 1969, révolutionnant la mode avec sa vision avant-gardiste. La marque challenge constamment les conventions avec des silhouettes déstructurées et une esthétique unique. CDG PLAY avec son cœur iconique est devenu un phénomène streetwear.", style: "luxe", price: 3, location: "asie", website: "https://www.comme-des-garcons.com", founded: "1969", origin: "Japon", logo: "https://logo.clearbit.com/comme-des-garcons.com" },
+            { name: "Levi's", description: "Icône du denim américain depuis 1853. Heritage et authenticité.", fullDescription: "Levi Strauss & Co. a inventé le jean en 1873, créant un vêtement devenu universel. Le 501 reste le jean le plus iconique de l'histoire. Levi's incarne l'authenticité américaine et continue d'innover tout en préservant son héritage. Programme Wellthread pour une mode plus durable.", style: "casual", price: 2, location: "amerique-nord", website: "https://www.levi.com", founded: "1853", origin: "États-Unis", logo: "https://logo.clearbit.com/levi.com" },
+            { name: "Off-White", description: "Streetwear de luxe par Virgil Abloh. Codes de la rue et haute couture.", fullDescription: "Off-White, créée par le regretté Virgil Abloh en 2012, a redéfini le luxe streetwear. Reconnaissable à ses bandes diagonales et ses guillemets ironiques, la marque fusionne culture de rue et haute couture. Collaborations légendaires avec Nike, IKEA et Louis Vuitton.", style: "streetwear", price: 3, location: "europe", website: "https://www.off---white.com", founded: "2012", origin: "Italie", logo: "https://logo.clearbit.com/off---white.com" },
+            { name: "Muji", description: "Design sans marque japonais. Fonctionnalité et esthétique épurée.", fullDescription: "Muji, contraction de 'Mujirushi Ryohin' (produits de qualité sans marque), incarne la philosophie japonaise du moins c'est plus. La marque propose des vêtements essentiels, fonctionnels et intemporels, sans logo apparent. Matières naturelles et couleurs neutres.", style: "minimaliste", price: 1, location: "asie", website: "https://www.muji.com", founded: "1980", origin: "Japon", logo: "https://logo.clearbit.com/muji.com" },
+            { name: "Sandro", description: "Élégance parisienne contemporaine. Chic accessible et tendances maîtrisées.", fullDescription: "Sandro, fondée par Evelyne Chétrite en 1984, propose une mode parisienne accessible. La marque capture l'essence du chic français avec des pièces élégantes et tendance. Matières de qualité, coupes flatteuses et attention aux détails caractérisent chaque collection.", style: "casual", price: 2, location: "europe", website: "https://www.sandro-paris.com", founded: "1984", origin: "France", logo: "https://logo.clearbit.com/sandro-paris.com" },
+            { name: "Dickies", description: "Workwear américain authentique. Du chantier à la rue depuis 1922.", fullDescription: "Dickies, fondée au Texas en 1922, habille les travailleurs américains depuis plus d'un siècle. Adoptée par les skateurs et la scène hip-hop, la marque est devenue un pilier du streetwear. Ses pantalons 874 et ses chemises de travail sont des classiques indémodables.", style: "vintage", price: 1, location: "amerique-nord", website: "https://www.dickies.com", founded: "1922", origin: "États-Unis", logo: "https://logo.clearbit.com/dickies.com" },
+            { name: "Aimé Leon Dore", description: "Streetwear new-yorkais raffiné. Nostalgie des années 90 et élégance sportive.", fullDescription: "Aimé Leon Dore, fondée par Teddy Santis à Queens, New York, mêle nostalgie des années 90, héritage grec et élégance sportive. La marque est connue pour ses collaborations avec New Balance et son café/boutique emblématique à Nolita. Streetwear sophistiqué et community-driven.", style: "streetwear", price: 3, location: "amerique-nord", website: "https://www.aimeleondore.com", founded: "2014", origin: "États-Unis", logo: "https://logo.clearbit.com/aimeleondore.com" },
+            { name: "Adidas", description: "Héritage sportif allemand et culture sneaker. Collaborations iconiques.", fullDescription: "Adidas, fondée par Adi Dassler en 1949, est un pilier du sport et de la mode. Des trois bandes aux Superstar et Stan Smith, la marque a marqué l'histoire de la sneaker. Collaborations légendaires avec Kanye West (Yeezy), Pharrell Williams et plus récemment Wales Bonner.", style: "sportswear", price: 2, location: "europe", website: "https://www.adidas.com", founded: "1949", origin: "Allemagne", logo: "https://logo.clearbit.com/adidas.com" },
+            { name: "Isabel Marant", description: "Bohème chic parisien. Féminité décontractée et rock'n'roll.", fullDescription: "Isabel Marant incarne le cool parisien depuis 1994. Sa mode bohème-chic, avec une touche rock'n'roll, a conquis le monde. Les sneakers compensées Bekket ont lancé une tendance mondiale. Style effortless, matières nobles et silhouettes flatteuses.", style: "luxe", price: 3, location: "europe", website: "https://www.isabelmarant.com", founded: "1994", origin: "France", logo: "https://logo.clearbit.com/isabelmarant.com" },
+            { name: "BAPE", description: "Streetwear japonais culte. Camouflage iconique et éditions limitées.", fullDescription: "A Bathing Ape (BAPE), fondée par Nigo à Tokyo, est une légende du streetwear japonais. Son camouflage distinctif, le shark hoodie et les sneakers BAPESTA sont devenus des icônes. Éditions ultra-limitées et collaborations exclusives alimentent le hype mondial.", style: "streetwear", price: 3, location: "asie", website: "https://www.bape.com", founded: "1993", origin: "Japon", logo: "https://logo.clearbit.com/bape.com" },
+            { name: "Arket", description: "Essentiels nordiques durables. Qualité et design intemporel.", fullDescription: "Arket, lancée par le groupe H&M en 2017, propose une mode minimaliste et durable inspirée des pays nordiques. La marque se concentre sur des essentiels de qualité, des matières durables et un design intemporel. Aussi connue pour ses cafés végétariens en boutique.", style: "minimaliste", price: 2, location: "europe", website: "https://www.arket.com", founded: "2017", origin: "Suède", logo: "https://logo.clearbit.com/arket.com" }
         ];
 
         // State
@@ -1980,7 +2161,9 @@
                     sportswear: 'Sportswear',
                     vintage: 'Vintage',
                     minimaliste: 'Minimaliste',
-                    eco: 'Éco-responsable'
+                    anime: 'Anime',
+                    goth: 'Goth',
+                    fancy: 'Fancy'
                 };
                 const locationLabels = {
                     'europe': '🇪🇺 Europe',
@@ -1992,13 +2175,23 @@
                 // Find the original index in the brands array
                 const originalIndex = brands.findIndex(b => b.name === brand.name);
 
+                const backgroundStyle = brand.logo 
+                    ? `style="background-image: url('${brand.logo}');"`
+                    : '';
+
+                const logoHtml = brand.logo 
+                    ? `<img class="brand-logo-img" src="${brand.logo}" alt="${brand.name}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                       <span class="placeholder-logo" style="display: none;">${brand.name.charAt(0)}</span>`
+                    : `<span class="placeholder-logo">${brand.name.charAt(0)}</span>`;
+
                 return `
                     <div class="brand-card" data-brand-index="${originalIndex}">
-                        <div class="brand-image">
+                        <div class="brand-image" ${backgroundStyle}>
+                            <div class="brand-image-blur"></div>
                             <div class="brand-tags">
-                                <span class="brand-tag style">${styleLabels[brand.style]}</span>
+                                <span class="brand-tag style">${styleLabels[brand.style] || brand.style}</span>
                             </div>
-                            <span class="placeholder-logo">${brand.name.charAt(0)}</span>
+                            ${logoHtml}
                         </div>
                         <div class="brand-content">
                             <h3 class="brand-name">${brand.name}</h3>
@@ -2040,7 +2233,9 @@
             sportswear: 'Sportswear',
             vintage: 'Vintage',
             minimaliste: 'Minimaliste',
-            eco: 'Éco-responsable'
+            anime: 'Anime',
+            goth: 'Goth',
+            fancy: 'Fancy'
         };
 
         const locationLabels = {
@@ -2056,8 +2251,29 @@
             const brand = brands[brandIndex];
             if (!brand) return;
 
+            // Handle logo display
+            const logoImg = document.getElementById('brandDetailLogoImg');
+            const logoText = document.getElementById('brandDetailLogo');
+            
+            if (brand.logo) {
+                logoImg.src = brand.logo;
+                logoImg.alt = brand.name;
+                logoImg.style.display = 'block';
+                logoText.style.display = 'none';
+                
+                // Fallback if image fails to load
+                logoImg.onerror = function() {
+                    this.style.display = 'none';
+                    logoText.style.display = 'flex';
+                    logoText.textContent = brand.name.charAt(0);
+                };
+            } else {
+                logoImg.style.display = 'none';
+                logoText.style.display = 'flex';
+                logoText.textContent = brand.name.charAt(0);
+            }
+
             // Populate modal with brand data
-            document.getElementById('brandDetailLogo').textContent = brand.name.charAt(0);
             document.getElementById('brandDetailTitle').textContent = brand.name;
             document.getElementById('brandDetailSubtitle').textContent = brand.description;
             document.getElementById('brandDetailStyle').textContent = styleLabels[brand.style] || brand.style;
@@ -2418,6 +2634,24 @@
 
         // Initial render
         renderBrands();
+
+        // Back to Top Button
+        const backToTopBtn = document.getElementById('backToTop');
+        
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 400) {
+                backToTopBtn.classList.add('visible');
+            } else {
+                backToTopBtn.classList.remove('visible');
+            }
+        });
+
+        backToTopBtn.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
     </script>
 </body>
 </html>
