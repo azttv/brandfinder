@@ -267,6 +267,100 @@
                 transform: scaleX(1);
             }
 
+            /* ===== RECOMMENDED BRAND: ELECTRIC BORDER ===== */
+            .brand-card.recommended {
+                border-color: transparent;
+                overflow: visible;
+                position: relative;
+                z-index: 1;
+            }
+            .brand-card.recommended::before {
+                display: none;
+            }
+            .brand-card.recommended:hover {
+                border-color: transparent;
+                box-shadow: 0 12px 50px rgba(255, 200, 0, 0.12);
+            }
+
+            .electric-border-wrap {
+                position: absolute;
+                inset: 0;
+                pointer-events: none;
+                border-radius: var(--radius);
+                z-index: 0;
+            }
+            .electric-stroke {
+                position: absolute;
+                inset: 0;
+                border-radius: inherit;
+                border: 2px solid #FFD700;
+                box-sizing: border-box;
+            }
+            .electric-glow-1 {
+                position: absolute;
+                inset: 0;
+                border-radius: inherit;
+                border: 2px solid rgba(255, 215, 0, 0.6);
+                box-sizing: border-box;
+                filter: blur(1px);
+                opacity: 0.5;
+            }
+            .electric-glow-2 {
+                position: absolute;
+                inset: 0;
+                border-radius: inherit;
+                border: 2px solid #FFD700;
+                box-sizing: border-box;
+                filter: blur(3px);
+                opacity: 0.5;
+            }
+            .electric-bg-glow {
+                position: absolute;
+                inset: 0;
+                border-radius: inherit;
+                transform: scale(1.06);
+                filter: blur(28px);
+                opacity: 0.2;
+                z-index: -1;
+                background: linear-gradient(-30deg, rgba(255, 215, 0, 0.7), transparent, #FFD700);
+            }
+
+            /* Recommended tag */
+            .recommended-tag {
+                display: inline-flex;
+                align-items: center;
+                gap: 0.35rem;
+                background: linear-gradient(135deg, rgba(255, 215, 0, 0.12), rgba(255, 170, 0, 0.08));
+                border: 1px solid rgba(255, 215, 0, 0.25);
+                border-radius: 6px;
+                padding: 0.25rem 0.6rem;
+                font-size: 0.7rem;
+                font-weight: 600;
+                color: #FFD700;
+                letter-spacing: 0.2px;
+                margin-top: 0.5rem;
+                white-space: nowrap;
+            }
+            .recommended-tag .rec-star {
+                font-size: 0.65rem;
+            }
+
+            /* Recommended filter chip */
+            .filter-chip.rec-chip {
+                border-color: rgba(255, 215, 0, 0.3);
+                color: #FFD700;
+            }
+            .filter-chip.rec-chip:hover {
+                background: rgba(255, 215, 0, 0.08);
+                border-color: rgba(255, 215, 0, 0.5);
+            }
+            .filter-chip.rec-chip.active {
+                background: rgba(255, 215, 0, 0.14);
+                border-color: #FFD700;
+                color: #FFD700;
+                box-shadow: 0 0 12px rgba(255, 215, 0, 0.15);
+            }
+
             .brand-card-top {
                 display: flex;
                 align-items: center;
@@ -1399,6 +1493,13 @@
                     onclick="setBrandFilter('all', this)"
                 >
                     Tout
+                </button>
+                <button
+                    class="filter-chip rec-chip"
+                    data-filter="recommended"
+                    onclick="toggleRecommendedFilter(this)"
+                >
+                    ⭐ Recommandé
                 </button>
                 <button
                     class="filter-chip"
@@ -33543,6 +33644,8 @@
             };
 
             let brandPriceFilter = "all";
+            let recommendedOnly = false;
+            const RECOMMENDED_BRANDS = ["Sora Clothing", "D'Avril Supply", "Off Script", "Tern"];
             let selectedCategories = new Set();
             let selectedBrands = new Set();
             let maxPrice = 900;
@@ -33571,11 +33674,13 @@
                 ).toLowerCase();
                 const grid = document.getElementById("brands-grid");
 
-                const filtered = BRANDS.filter((b) => {
+                let filtered = BRANDS.filter((b) => {
                     if (
                         brandPriceFilter !== "all" &&
                         b.priceRange !== brandPriceFilter
                     )
+                        return false;
+                    if (recommendedOnly && !RECOMMENDED_BRANDS.includes(b.name))
                         return false;
                     if (query) {
                         const searchStr = (
@@ -33594,21 +33699,37 @@
                     return true;
                 });
 
+                // Sort: recommended first
+                filtered.sort((a, b) => {
+                    const aRec = RECOMMENDED_BRANDS.includes(a.name) ? 0 : 1;
+                    const bRec = RECOMMENDED_BRANDS.includes(b.name) ? 0 : 1;
+                    return aRec - bRec;
+                });
+
                 grid.innerHTML = filtered
                     .map(
-                        (b, i) => `
-    <div class="brand-card" style="--card-accent: ${b.color}; animation-delay: ${i * 0.06}s" onclick="window.open('${b.url}', '_blank')">
-      <div class="brand-card-top">
+                        (b, i) => {
+                            const isRec = RECOMMENDED_BRANDS.includes(b.name);
+                            return `
+    <div class="brand-card${isRec ? ' recommended' : ''}" style="--card-accent: ${b.color}; animation-delay: ${i * 0.06}s" onclick="window.open('${b.url}', '_blank')"${isRec ? ' data-recommended="true"' : ''}>
+      ${isRec ? `<div class="electric-border-wrap">
+        <div class="electric-stroke"></div>
+        <div class="electric-glow-1"></div>
+        <div class="electric-glow-2"></div>
+        <div class="electric-bg-glow"></div>
+      </div>` : ''}
+      <div class="brand-card-top" style="position:relative;z-index:1;">
         <div class="brand-avatar" style="background: ${b.color}">
           <img src="${BRAND_LOGOS[b.name] || ""}" alt="${b.name}" style="width:100%;height:100%;object-fit:contain;padding:6px;border-radius:inherit;" onerror="this.style.display='none';this.parentElement.textContent='${b.logo_letter}'">
         </div>
         <div>
           <h3>${b.name}</h3>
           <div class="brand-type">${b.type}</div>
+          ${isRec ? '<div class="recommended-tag"><span class="rec-star">⭐</span> Conseillé par @amdewen</div>' : ''}
         </div>
       </div>
-      <p class="brand-desc">${b.description}</p>
-      <div class="brand-footer">
+      <p class="brand-desc" style="position:relative;z-index:1;">${b.description}</p>
+      <div class="brand-footer" style="position:relative;z-index:1;">
         <div class="brand-meta">
           <span class="badge badge-price">${b.priceRange}</span>
           <span class="badge badge-count">${b.productCount} produits</span>
@@ -33617,9 +33738,12 @@
         <a class="brand-link" href="${b.url}" target="_blank" onclick="event.stopPropagation()">Visiter ↗</a>
       </div>
     </div>
-  `,
+  `;},
                     )
                     .join("");
+
+                // Init electric borders for recommended cards
+                requestAnimationFrame(function() { initElectricBorders(); });
             }
 
             function filterBrands() {
@@ -33629,10 +33753,66 @@
             function setBrandFilter(filter, el) {
                 brandPriceFilter = filter;
                 document
-                    .querySelectorAll("#brand-price-filters .filter-chip")
+                    .querySelectorAll("#brand-price-filters .filter-chip:not(.rec-chip)")
                     .forEach((c) => c.classList.remove("active"));
                 el.classList.add("active");
                 renderBrands();
+            }
+
+            function toggleRecommendedFilter(el) {
+                recommendedOnly = !recommendedOnly;
+                el.classList.toggle("active", recommendedOnly);
+                renderBrands();
+            }
+
+            // ===== ELECTRIC BORDER (ReactBits ElectricBorder port) =====
+            var electricBorderCounter = 0;
+
+            function initElectricBorders() {
+                var cards = document.querySelectorAll('.brand-card.recommended');
+                cards.forEach(function(card) {
+                    if (card.dataset.electricInit) return;
+                    card.dataset.electricInit = "1";
+
+                    var uid = 'eb-' + (++electricBorderCounter);
+                    var stroke = card.querySelector('.electric-stroke');
+                    if (!stroke) return;
+
+                    // Create SVG filter
+                    var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+                    svg.setAttribute('aria-hidden', 'true');
+                    svg.style.cssText = 'position:fixed;left:-10000px;top:-10000px;width:10px;height:10px;pointer-events:none;opacity:0.001;';
+
+                    var w = Math.max(1, Math.round(card.clientWidth));
+                    var h = Math.max(1, Math.round(card.clientHeight));
+                    var dur = '6s';
+
+                    svg.innerHTML = '<defs><filter id="' + uid + '" colorInterpolationFilters="sRGB" x="-200%" y="-200%" width="500%" height="500%">'
+                        + '<feTurbulence type="turbulence" baseFrequency="0.02" numOctaves="10" result="noise1" seed="1"/>'
+                        + '<feOffset in="noise1" dx="0" dy="0" result="offsetNoise1">'
+                        + '  <animate attributeName="dy" values="' + h + '; 0" dur="' + dur + '" repeatCount="indefinite" calcMode="linear"/>'
+                        + '</feOffset>'
+                        + '<feTurbulence type="turbulence" baseFrequency="0.02" numOctaves="10" result="noise2" seed="1"/>'
+                        + '<feOffset in="noise2" dx="0" dy="0" result="offsetNoise2">'
+                        + '  <animate attributeName="dy" values="0; -' + h + '" dur="' + dur + '" repeatCount="indefinite" calcMode="linear"/>'
+                        + '</feOffset>'
+                        + '<feTurbulence type="turbulence" baseFrequency="0.02" numOctaves="10" result="noise3" seed="2"/>'
+                        + '<feOffset in="noise3" dx="0" dy="0" result="offsetNoise3">'
+                        + '  <animate attributeName="dx" values="' + w + '; 0" dur="' + dur + '" repeatCount="indefinite" calcMode="linear"/>'
+                        + '</feOffset>'
+                        + '<feTurbulence type="turbulence" baseFrequency="0.02" numOctaves="10" result="noise4" seed="2"/>'
+                        + '<feOffset in="noise4" dx="0" dy="0" result="offsetNoise4">'
+                        + '  <animate attributeName="dx" values="0; -' + w + '" dur="' + dur + '" repeatCount="indefinite" calcMode="linear"/>'
+                        + '</feOffset>'
+                        + '<feComposite in="offsetNoise1" in2="offsetNoise2" result="part1"/>'
+                        + '<feComposite in="offsetNoise3" in2="offsetNoise4" result="part2"/>'
+                        + '<feBlend in="part1" in2="part2" mode="color-dodge" result="combinedNoise"/>'
+                        + '<feDisplacementMap in="SourceGraphic" in2="combinedNoise" scale="30" xChannelSelector="R" yChannelSelector="B"/>'
+                        + '</filter></defs>';
+
+                    document.body.appendChild(svg);
+                    stroke.style.filter = 'url(#' + uid + ')';
+                });
             }
 
             // ===== STORE PAGE =====
